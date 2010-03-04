@@ -53,7 +53,9 @@ Node* AbstractChord::closestPrecedingNode(int nid)
 {
 	nodesVector::iterator it;
 	
+	cout << "closestPrecedingNode\n";
 	for (it = fingerTable.end(); it != fingerTable.begin(); --it) {
+		cout << "it = " << *it << "\n";
 		if(insideRange((*it)->getId(), thisNode->getId() + 1, nid - 1))
 		   return (*it);
 	}

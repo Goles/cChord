@@ -78,7 +78,7 @@ libmymed.a:
 	ar -cvq libmymed.a *.o
 
 clean : 
-		rm \
+		rm -f \
 		./HTTP_Client.o\
 		./crypt_argchk.o\
 		./sha1.o\
@@ -93,15 +93,18 @@ clean :
 		./ProtocolSingleton.o\
 		./http_operations.o\
 		./TransportHTTP.o\
+		
+veryclean : clean
+		rm -f \
+		./libmymed.a\
 
 install : MYMEDLIB
 	@echo --= HEADERS =--
 	@echo $(HEADER)
 	@echo --= CLEANING OLD HEADERS =--
-	rm -R /usr/include/mymed
-	mkdir /usr/include/mymed
+	mkdir -p /usr/include/myMed
 	@echo --= INSTALLING MYMEDLIB HEADERS =--
-	cp $(HEADER) /usr/include/mymed
+	cp $(HEADER) /usr/include/myMed
 
 #
 # Build the parts of MYMEDLIB
