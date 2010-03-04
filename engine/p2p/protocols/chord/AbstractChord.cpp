@@ -102,8 +102,6 @@ bool AbstractChord::insideRange(int id, int begin, int end)
 	int MAXid = pow(2, spacesize - 1);
 	int MINid = 0;
 	
-	cout << "insideRange:[0, " << MAXid << "]\n";
-
 	return	(begin < end && begin <= id && id <= end) || 
 			(begin > end && ((begin <= id && id <= MAXid) || 
 			(MINid <= id && id <= end))) || 
