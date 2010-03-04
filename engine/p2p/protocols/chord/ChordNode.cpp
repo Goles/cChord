@@ -11,10 +11,13 @@
 #include "MyThread.h"
 #include "tomcrypt.h"
 #include "sha1toint.h"
-#include <sstream>
-#include <iostream>
 #include "TransportHTTP.h"
 #include "callbacks.h"
+#include <sstream>
+#include <iostream>
+#include <assert.h>
+#include <math.h>
+
 
 // /////////////////////////////////////////// //
 //           CONSTRUCTOR & DESTRUCTOR          //
@@ -31,8 +34,13 @@ ChordNode::ChordNode(const string &ip, int port)
 }
 
 ChordNode::ChordNode(const string &ip, int port, const string &s)
-{	
+{
 	this->initializer(ip, port, s);
+}
+
+ChordNode::ChordNode(const string &ip, int port, const string &s, unsigned int id)
+{
+	this->initializer(ip, port, s, id);
 }
 
 ChordNode::~ChordNode()
@@ -42,12 +50,26 @@ ChordNode::~ChordNode()
 	delete transport;
 }
 
-/*
- * This is equivalent to the Second Constructor code in ChordNode.java
- * public ChordNode(String ip, int port, String overlayIntifier) {
- */
-
+// INITIALIZER WITH SHA-1
 void ChordNode::initializer(const string &ip, int port, const string &overlayIntifier)
+{
+	//Allocate the container for the hash.
+	unsigned char out[overlayIntifier.length()];
+
+	//Initialize the SHA-1 hash function according to Tomcrypt library.
+	hash_state sha1;
+	sha1_init(&sha1);
+
+	//Apply SHA-1 to the overlayIntifier.
+	unsigned char *in = (unsigned char*)overlayIntifier.c_str();
+	sha1_process(&sha1, in, overlayIntifier.length());
+	sha1_done(&sha1, out);
+
+	//Transform the SHA-1 String to an integer.
+	unsigned int id = sha1ToInt(out);
+}
+
+void ChordNode::initializer(const string &ip, int port, const string &overlayIntifier, unsigned int id)
 {
 	//create our stabilizer thread instance.
 	stableThread = new MyThread(0, this);
@@ -58,24 +80,12 @@ void ChordNode::initializer(const string &ip, int port, const string &overlayInt
 	//set the overlay identifier.
 	this->overlayIntifier = overlayIntifier;
 	
-	//Allocate the container for the hash.
-	unsigned char out[overlayIntifier.length()];
-	
-	//Initialize the SHA-1 hash function according to Tomcrypt library.
-	hash_state sha1;	
-	sha1_init(&sha1);
-	
-	//Apply SHA-1 to the overlayIntifier.
-	unsigned char *in = (unsigned char*)overlayIntifier.c_str();	
-	sha1_process(&sha1, in, overlayIntifier.length());
-	sha1_done(&sha1, out);
-	
-	//Transform the SHA-1 String to an integer.
-	unsigned int id = sha1ToInt(out);
-	
 	//Call our parent's initializer
 	initialise(ip, id, port);
 	
+	// check if the idE[0, 2^(spacesize - 1)]
+	assert(!(id >  pow(2, spacesize - 1)));
+
 	//We start-up our stabilizer thread.
 	checkStable();
 }

@@ -28,8 +28,10 @@ class ChordNode : public AbstractChord
 public:
 	ChordNode(const string &ip, int port);
 	ChordNode(const string &ip, int port, const string &s);
+	ChordNode(const string &ip, int port, const string &s, unsigned int id); // To test you can define the id manually
 	~ChordNode();
-	void initializer(const string &ip, int port, const string &overlayIntifier); //This is to help the default constructor.
+	void initializer(const string &ip, int port, const string &overlayIntifier); 		 // Initialization which use SHA-1
+	void initializer(const string &ip, int port, const string &overlayIntifier, unsigned int id); // Initialization by default
 	
 	void			setIdentifier(const string &iD) { overlayIntifier = iD; }
 	void			setTransport(TransportHTTP *t) { transport = t; }

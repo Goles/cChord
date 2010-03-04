@@ -11,6 +11,7 @@
 #define NODE_H
 
 #include <string>
+#include <iostream>
 
 using namespace std;
 
@@ -26,14 +27,14 @@ public:
 	string	toString();
 
 	//Getters & Setters
-	int		getId() { return nid; }
-	void	setId(int inId) { nid = inId; }
-	string	getIp(){ return ip; }
-	void	setIp(const std::string inIp) { ip = inIp; }
-	unsigned int getNid() { return nid; }
-	void	setNid(unsigned int n) { nid = n; }
-	int		getPort() { return port; }
-	void	setPort(int inPort){ port = inPort; }
+	unsigned int 	getId() { return nid; }
+	void			setId(unsigned  int inId) { nid = inId; }
+	string			getIp(){ return ip; }
+	void			setIp(const std::string inIp) { ip = inIp; }
+	unsigned int	getNid() { return nid; }
+	void			setNid(unsigned int n) { nid = n; }
+	int				getPort() { return port; }
+	void			setPort(int inPort){ port = inPort; }
 
 private:
 	string			ip;
