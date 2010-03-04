@@ -47,6 +47,7 @@ public:
 //				cout << "- stabilize -\n";
 //				myNode->stabilize();
 //				myNode->fixFingersTable();
+				myNode->printStatus();
 				this->sleep(myNode->getTimeToCheck());
 			}			
 		}

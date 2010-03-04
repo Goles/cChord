@@ -69,7 +69,7 @@ public:
 
 	/* Helper Methods */
 	bool	insideRange(int id, int a, int b);
-	void	debugPrintFingers();
+	void	printStatus();
 
 protected:
 	typedef map<int, string> stringMap;
