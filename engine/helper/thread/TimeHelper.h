@@ -9,8 +9,6 @@
  *  widely used to seed Threading timers...etc.
  */
 
-#ifdef OSX
-
 #pragma weak clock_gettime
 
 #include <sys/time.h>
@@ -84,6 +82,4 @@ int clock_gettime(clockid_t clk_id, struct timespec *tp) {
 	}
 	return retval;
 }
-
-#endif
 

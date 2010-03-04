@@ -11,6 +11,7 @@
 #define TRANSPORT_HTTP_H
 
 #include "ITransport.h"
+#include "mongoose.h"
 #include <iostream>
 #include <string>
 #include <sstream>
@@ -20,19 +21,20 @@ class ChordNode;
 class TransportHTTP: public ITransport
 {
 public:
+	//Constructor & Destructor.
+	TransportHTTP(int port);
+	~TransportHTTP();
 	
-	//Constructor.
-	TransportHTTP(int port /*, IOverlay o*/)
-	{
-		this->setPort(port);
-		/*this-> setOverlay(o);*/
-	}
-	
+	//API methods
 	string	sendRequest(const string &message, Node *destination);
 	string	sendRequest(string *callback, const string &message, Node *destination); //To override the sendReq pure virtual
 	string	sendTrackerRequest(const string &host, int port, const string &callback);
 	string	doStuff(const string &code);
 	void	test();
+	
+	//HTTP server methods
+	void 	startHTTP();
+	void 	stopHTTP();
 	
 	//Simple tracker interface.
 	string connectToTracker(const string &ip, int port, Node *n);
@@ -40,7 +42,7 @@ public:
 private:
 	
 	int port;
-	//Missing input-ouput overlay.
+	struct mg_context *ctx;
 };
 
 #endif

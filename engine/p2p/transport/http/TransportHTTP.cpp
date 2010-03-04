@@ -18,6 +18,46 @@
 #include "ChordNode.h"
 #include "IOverlay.h"
 #include <arpa/inet.h>
+#include <sstream>
+#include <iostream>
+
+/*
+ * Constructor & Destructor.
+ */
+TransportHTTP::TransportHTTP(int port)
+{
+	//Constructor.
+	this->setPort(port);
+	
+	//Initialize the webserver
+	this->startHTTP();
+}
+
+TransportHTTP::~TransportHTTP()
+{
+	this->stopHTTP();
+}
+
+void TransportHTTP::startHTTP()
+{
+	stringstream portStream (stringstream::in | stringstream::out);
+	portStream << this->port;
+	
+	this->ctx = mg_start();     // Start Mongoose serving context thread
+	mg_set_option(ctx, "root", ".");  // Set document root
+	mg_set_option(ctx, "ports", portStream.str().c_str());    // Listen on port XXXX
+
+	/* Now Mongoose is up, running and configured.
+	   Serve until somebody terminates us */
+	
+	cout << "Mongoose Server is running on http://localhost:" << this->port << endl;
+}
+
+void TransportHTTP::stopHTTP()
+{
+	mg_stop(ctx);
+	cout << "Mongoose Server is now stopped" << endl;
+}
 
 /*
  * Method that encapsulates a simple tracker connection using HTTP.
