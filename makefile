@@ -1,6 +1,6 @@
 ###################################################
 #
-# Makefile for CLI_engine
+# Makefile for MYMEDLIB MAC OS X.
 # Creator [Xcode -> Makefile Ver: Feb 14 2007 09:18:41]
 # Created: [Mon Mar  1 11:40:48 2010]
 #
@@ -8,15 +8,32 @@
 
 #
 # Macros
-#
+# 
+
+SHELL := /bin/bash
 
 CC = /usr/bin/g++
-CC_OPTIONS = 
-# Fedora option
-LNK_OPTIONS = -lpthread -lrt -ldl
+LNK_OPTIONS = 
+CCFLAGS =
+
+@echo ---=/\=\/= Building myMedLib =\/=/\=--
+
+#if we passed ARCH=osx
+ifeq ($(ARCH),osx)
+	@echo Building for OSX ( ARCH=osx )
+	CC_OPTIONS = -DOSX=1
+endif
+
+#if we passed ARCH=linux
+ifeq ($(ARCH),linux)
+	@echo Building for LINUX ( ARCH=linux )
+	LNK_OPTIONS = -lpthread -lrt -ldl
+endif
+
+HEADER = $(shell for file in `find . -name *.h`;do echo $$file; done)
 
 #
-# INCLUDE directories for CLI_engine
+# INCLUDE directories for MYMEDLIB
 #
 
 INCLUDE = -I.\
@@ -32,13 +49,12 @@ INCLUDE = -I.\
 		-Iengine/p2p/transport/http\
 		-Iengine/p2p/transport
 
-
 #
-# Build CLI_engine
+# Build MYMEDLIB
 #
-all: CLI_engine libmymed.a
+all: MYMEDLIB libmymed.a
 
-CLI_engine : \
+MYMEDLIB : \
 		./HTTP_Client.o\
 		./crypt_argchk.o\
 		./sha1.o\
@@ -53,9 +69,11 @@ CLI_engine : \
 		./ProtocolSingleton.o\
 		./http_operations.o\
 		./TransportHTTP.o
+	
 
-# remove the old tapestry library and remake the new one
+# actualy archive the static library with ar.
 libmymed.a:
+	@echo Archiving myMedLib...
 	rm -f libmymed.a
 	ar -cvq libmymed.a *.o
 
@@ -75,15 +93,19 @@ clean :
 		./ProtocolSingleton.o\
 		./http_operations.o\
 		./TransportHTTP.o\
-		CLI_engine
 
-install : CLI_engine
-		cp CLI_engine CLI_engine
+install : MYMEDLIB
+	@echo --= HEADERS =--
+	@echo $(HEADER)
+	@echo --= CLEANING OLD HEADERS =--
+	rm -R /usr/include/mymed
+	mkdir /usr/include/mymed
+	@echo --= INSTALLING MYMEDLIB HEADERS =--
+	cp $(HEADER) /usr/include/mymed
 
 #
-# Build the parts of CLI_engine
+# Build the parts of MYMEDLIB
 #
-
 
 # Item # 2 -- HTTP_Client --
 ./HTTP_Client.o : engine/helper/HTTP_Client.cpp

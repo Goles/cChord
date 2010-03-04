@@ -1,7 +1,14 @@
-Building the myMed Engine:
+Building the myMed Engine in OSX:
 
-$make -f makefile_name
-$make clean
+$make ARCH=osx
 
-This should produce a libmymed.a static library which you can link to your project.
+Building the myMed Engine in LINUX:
+
+$make ARCH=linux
+
+Installing the mymed library
+
+$sudo make install
+
+This should produce a libmymed.a static library which you can link to your project and copy the library headers to /usr/include/mymed/
 

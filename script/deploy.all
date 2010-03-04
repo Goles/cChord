@@ -1,6 +1,0 @@
-#!/bin/bash
-for file in `find . -name *.h`
- do
-	echo $file " is header"
-	cp $file /usr/include/myMed/
-done
