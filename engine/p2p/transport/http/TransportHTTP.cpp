@@ -17,6 +17,7 @@
 #include "HTTP_Client.h"
 #include "ChordNode.h"
 #include "IOverlay.h"
+#include "callbacks.h"
 #include <arpa/inet.h>
 #include <sstream>
 #include <iostream>
@@ -38,28 +39,61 @@ TransportHTTP::~TransportHTTP()
 	this->stopHTTP();
 }
 
+/*
+ *	HTTP server operations.
+ */
+
+//Starts up the mongoose HTTP server.
 void TransportHTTP::startHTTP()
 {
 	stringstream portStream (stringstream::in | stringstream::out);
 	portStream << this->getPort();
 	
-	cout << "nice" << portStream.str().c_str();
-	
 	this->ctx = mg_start();     // Start Mongoose serving context thread
 	mg_set_option(ctx, "root", ".");  // Set document root
 	mg_set_option(ctx, "ports", portStream.str().c_str());    // Listen on port XXXX
-
+	this->initCallbacks();
+	
 	/* Now Mongoose is up, running and configured.
 	   Serve until somebody terminates us */
 	
 	cout << "Mongoose Server is running on http://localhost:" << this->getPort() << endl;
 }
 
+//Stops the mongoose HTTP server.
 void TransportHTTP::stopHTTP()
 {
 	mg_stop(ctx);
 	cout << "Mongoose Server is now stopped" << endl;
 }
+
+void TransportHTTP::initCallbacks()
+{
+	if(ctx != NULL)
+	{
+		/*Test callbacks*/
+		mg_set_uri_callback(ctx, "/requesthandler", &call_request_handler, NULL);
+		mg_set_uri_callback(ctx, "/ping", &call_ping, NULL);
+		mg_set_uri_callback(ctx, "/pong", &call_pong, NULL);
+		
+		/*Set tracker transport code Callbacks*/
+		mg_set_uri_callback(ctx, "/tracker/addnode", &call_tracker_addnode, NULL);
+		mg_set_uri_callback(ctx, "/tracker/getconnection", &call_tracker_getconnection, NULL);
+		mg_set_uri_callback(ctx, "/tracker/removenode", &call_tracker_removenode, NULL);	
+		mg_set_uri_callback(ctx, "/tracker/join", &call_tracker_join, NULL);	
+		
+		/*Set Chord transport code Callbacks*/
+		mg_set_uri_callback(ctx, "/getpred", &call_chord_getpred, NULL);
+		mg_set_uri_callback(ctx, "/findsucc", &call_chord_findsucc, NULL);
+		mg_set_uri_callback(ctx, "/notif", &call_chord_notif, NULL);
+		mg_set_uri_callback(ctx, "/join", &call_chord_join, NULL);
+		mg_set_uri_callback(ctx, "/put", &call_chord_put, NULL);
+		mg_set_uri_callback(ctx, "/get", &call_chord_get, NULL);
+		mg_set_uri_callback(ctx, "/setsucc", &call_chord_setsucc, NULL);
+		mg_set_uri_callback(ctx, "/setpred", &call_chord_setpred, NULL);
+	}
+}
+
 
 /*
  * Method that encapsulates a simple tracker connection using HTTP.

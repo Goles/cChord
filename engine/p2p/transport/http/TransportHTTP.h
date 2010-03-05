@@ -35,6 +35,7 @@ public:
 	//HTTP server methods
 	void 	startHTTP();
 	void 	stopHTTP();
+	void	initCallbacks();
 	
 	//Simple tracker interface.
 	string connectToTracker(const string &ip, int port, Node *n);

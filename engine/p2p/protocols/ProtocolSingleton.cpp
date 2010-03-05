@@ -39,6 +39,12 @@ void ProtocolSingleton::initChordNode(const string &ip, int port, const string &
 	myNode = new ChordNode(ip, port, s);
 }
 
+//Initializes a ChordNode from the given parameters.
+void ProtocolSingleton::initChordNode(const string &ip, int port, const string &s, unsigned int nid)
+{
+	myNode = new ChordNode(ip, port, s, nid);
+}
+
 void ProtocolSingleton::stopChord()
 {
 	delete myNode;

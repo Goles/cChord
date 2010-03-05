@@ -26,7 +26,7 @@ char* process_http(int sockfd, char *host, char *page, char *poststr)
 			 "Content-length: %d\r\n\r\n"
 			 "%s", 
 			 page, host, (int)strlen(poststr), poststr);
-	
+
 	if(write(sockfd, sendline, sizeof(sendline)) == -1)
 	{
 		printf("Failed to write to socket! \n");
@@ -37,7 +37,7 @@ char* process_http(int sockfd, char *host, char *page, char *poststr)
 	while ((n = read(sockfd, recvline, MAXLINE)) > 0) {
 		recvline[n] = '\0';
 	}
-	
+
 	//For debugging you can view the HTML response etc with this.
 	printf("**** BACK FROM THE POST ****\n\n %s\n\n", recvline);
 	
@@ -60,7 +60,7 @@ char* sendPost(char *hostName, int port, char *page, char *postString)
 		return 0; //false
 	}
    
-	//printf("hostname: %s\n", hptr->h_name);
+	printf("hostname: %s\n", hptr->h_name);
    
 	if (hptr->h_addrtype == AF_INET && (pptr = hptr->h_addr_list) != NULL) {
 		//printf("address: %s\n", inet_ntop(hptr->h_addrtype, *pptr, str, sizeof(str)));

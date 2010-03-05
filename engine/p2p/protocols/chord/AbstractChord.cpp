@@ -23,7 +23,7 @@ void AbstractChord::initialise(string ip, int id, int port)
 	next		= 0; // C++ we have to set next to zero to avoid possible garbage...
 	alive		= true;
 	spacesize	= 10;
-	timeToCheck	= 1;
+	timeToCheck	= 10;
 
 	for(int i = 0; i < spacesize; i++)
 	{
