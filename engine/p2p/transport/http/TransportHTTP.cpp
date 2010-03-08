@@ -41,16 +41,18 @@ TransportHTTP::~TransportHTTP()
 void TransportHTTP::startHTTP()
 {
 	stringstream portStream (stringstream::in | stringstream::out);
-	portStream << port;
+	portStream << this->getPort();
 	
-	ctx = mg_start();     // Start Mongoose serving context thread
+	cout << "nice" << portStream.str().c_str();
+	
+	this->ctx = mg_start();     // Start Mongoose serving context thread
 	mg_set_option(ctx, "root", ".");  // Set document root
 	mg_set_option(ctx, "ports", portStream.str().c_str());    // Listen on port XXXX
 
 	/* Now Mongoose is up, running and configured.
 	   Serve until somebody terminates us */
 	
-	cout << "Mongoose Server is running on http://localhost:" << port << endl;
+	cout << "Mongoose Server is running on http://localhost:" << this->getPort() << endl;
 }
 
 void TransportHTTP::stopHTTP()
