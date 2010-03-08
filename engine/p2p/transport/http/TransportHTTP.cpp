@@ -20,6 +20,7 @@
 #include <arpa/inet.h>
 #include <sstream>
 #include <iostream>
+#include <string.h>
 
 /*
  * Constructor & Destructor.
@@ -42,8 +43,6 @@ void TransportHTTP::startHTTP()
 {
 	stringstream portStream (stringstream::in | stringstream::out);
 	portStream << this->getPort();
-	
-	cout << "nice" << portStream.str().c_str();
 	
 	this->ctx = mg_start();     // Start Mongoose serving context thread
 	mg_set_option(ctx, "root", ".");  // Set document root
@@ -93,10 +92,9 @@ string TransportHTTP::connectToTracker(const string &ip, int port, Node *n)
  */
 string TransportHTTP::sendRequest(const string &message, Node *destination)
 {	
-	int a = atoi(message.c_str());
+	int a = atoi(message.c_str()); // <= BUG TO FIX
 	
 	string *callback;
-	
 	
 	//We need to forge the corresponding callback string for the message passed.
 	

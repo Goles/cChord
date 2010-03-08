@@ -36,7 +36,7 @@ public:
 	void			setIdentifier(const string &iD) { overlayIntifier = iD; }
 	void			setTransport(TransportHTTP *t) { transport = t; }
 	
-	virtual string	forward(string message, Node* destination);
+	virtual string	sendRequest(string message, Node* destination);
 	virtual void	checkStable();
 	
 	// /////////////////////////////////////////// //
