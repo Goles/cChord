@@ -41,7 +41,6 @@ public:
 	
 private:
 	
-	int port;
 	struct mg_context *ctx;
 };
 

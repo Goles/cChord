@@ -75,7 +75,7 @@ void ChordNode::initializer(const string &ip, int port, const string &overlayInt
 	stableThread = new MyThread(0, this);
 	
 	//Initialize the transport layer.
-	transport = new TransportHTTP(80);
+	transport = new TransportHTTP(port);
 	
 	//set the overlay identifier.
 	this->overlayIntifier = overlayIntifier;
