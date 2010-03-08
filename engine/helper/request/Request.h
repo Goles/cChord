@@ -15,22 +15,22 @@
 using std::string;
 using std::stringstream;
 
-class Message {
+class Request {
 
 
 
 public:
 	/* CONSTRUCTOR */
-	Message(string overlayID, int code, string message);
+	Request(string overlayID, int code, string request);
 
 	/* GETTER */
 	int 	getCode() const { return code; }
-	string 	getMessage() const { return message; }
+	string 	getRequest() const { return request; }
 	string 	getOverlayID() const { return overlayID; }
 
 	/* SETTER */
 	void setCode(int code) { this->code = code; }
-	void setMessage(string message) { this->message = message; }
+	void setRequest(string request) { this->request = request; }
 	void setOverlayID(string overlayID) { this->overlayID = overlayID; }
 
 	/* Serialization */
@@ -39,7 +39,7 @@ public:
 private:
 	string 	overlayID; // Overlay Identifier
 	int		code; // see ChordTransportCode.h
-	string 	message; // message content (can be empty)
+	string 	request; // request content (can be empty)
 };
 
 #endif

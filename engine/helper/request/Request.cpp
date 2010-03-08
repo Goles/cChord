@@ -7,18 +7,18 @@
  *
  */
 
-#include "Message.h"
+#include "Request.h"
 #include <sstream>
 #include <iostream>
 
-Message::Message(string overlayID, int code, string message){
+Request::Request(string overlayID, int code, string request){
 	this->overlayID = overlayID;
 	this->code		= code;
-	this->message 	= message;
+	this->request 	= request;
 }
 
-string Message::serialize(void){
+string Request::serialize(void){
 	stringstream ss (stringstream::in | stringstream::out);
-	ss << overlayID << ","<< code << "," << message;
+	ss << overlayID << ","<< code << "," << request;
 	return ss.str();
 }

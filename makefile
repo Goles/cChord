@@ -43,7 +43,7 @@ INCLUDE = -I.\
 		-Iengine/helper/mongoose_http_server/callbacks\
 		-Iengine/helper/mongoose_http_server\
 		-Iengine/helper/thread\
-		-Iengine/helper/message\
+		-Iengine/helper/request\
 		-Iengine/p2p/node\
 		-Iengine/p2p/protocols/chord\
 		-Iengine/p2p/protocols\
@@ -70,7 +70,7 @@ MYMEDLIB : \
 		./ProtocolSingleton.o\
 		./http_operations.o\
 		./TransportHTTP.o\
-		./Message.o
+		./Request.o
 	
 
 # actualy archive the static library with ar.
@@ -95,7 +95,7 @@ clean :
 		./ProtocolSingleton.o\
 		./http_operations.o\
 		./TransportHTTP.o\
-		./Message.o
+		./Request.o
 		
 veryclean : clean
 		rm -f \
@@ -183,8 +183,8 @@ install : MYMEDLIB
 	$(CC) $(CCFLAGS) $(CC_OPTIONS) engine/p2p/transport/http/TransportHTTP.cpp -c $(INCLUDE) -o ./TransportHTTP.o
 	
 # Item # 16 -- TransportHTTP --
-./Message.o : engine/helper/message/Message.cpp
-	$(CC) $(CCFLAGS) $(CC_OPTIONS) engine/helper/message/Message.cpp -c $(INCLUDE) -o ./Message.o
+./Request.o : engine/helper/request/Request.cpp
+	$(CC) $(CCFLAGS) $(CC_OPTIONS) engine/helper/request/Request.cpp -c $(INCLUDE) -o ./Request.o
 
 
 ##### END RUN ####
