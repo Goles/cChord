@@ -71,7 +71,7 @@ void AbstractChord::stabilize()
 	ss << GETPRED;
 
 	string pred = forward(ss.str(), successor);
-
+	
 	if(pred.compare(thisNode->toString()))
 	{
 		Node *x = new Node(pred);

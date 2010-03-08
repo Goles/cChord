@@ -171,8 +171,8 @@ install : MYMEDLIB
 
 
 # Item # 14 -- http_operations --
-./http_operations.o : engine/p2p/transport/http/http_operations.c
-	$(CC) $(CCFLAGS) $(CC_OPTIONS) engine/p2p/transport/http/http_operations.c -c $(INCLUDE) -o ./http_operations.o
+./http_operations.o : engine/p2p/transport/http/http_operations.cpp
+	$(CC) $(CCFLAGS) $(CC_OPTIONS) engine/p2p/transport/http/http_operations.cpp -c $(INCLUDE) -o ./http_operations.o
 
 
 # Item # 15 -- TransportHTTP --

@@ -98,7 +98,9 @@ void ChordNode::initializer(const string &ip, int port, const string &overlayInt
  *	Forward a message to a peer, the message is in the format: "<IP+PORT>,TRANSPORT_CODE"
  */
 string ChordNode::forward(string message, Node* destination)
-{
+{	
+	printf("host******:");
+	
 	stringstream ss_message (stringstream::in | stringstream::out);
 	
 	//form the message "Node_identifier,message" format.

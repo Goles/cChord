@@ -7,11 +7,7 @@
  *
  */
 
-#ifdef XCODE
-	#include "http_operations.c" //I include .c file for the linker to notice the .o
-#else
-	#include "http_operations.h"
-#endif
+#include "http_operations.h" //I include .c file for the linker to notice the .o
 
 #include "TransportHTTP.h"
 #include "HTTP_Client.h"
@@ -25,10 +21,11 @@
 /*
  * Constructor & Destructor.
  */
-TransportHTTP::TransportHTTP(int port)
+TransportHTTP::TransportHTTP(int inPort)
 {
 	//Constructor.
-	this->setPort(port);
+	this->setPort(inPort);
+	myPort = inPort;
 	
 	//Initialize the webserver
 	this->startHTTP();
@@ -46,12 +43,14 @@ TransportHTTP::~TransportHTTP()
 //Starts up the mongoose HTTP server.
 void TransportHTTP::startHTTP()
 {
-	stringstream portStream (stringstream::in | stringstream::out);
-	portStream << this->getPort();
+	char buffer[255]; 
+	sprintf(buffer, "%d", myPort);
+	
+	string a(buffer);
 	
 	this->ctx = mg_start();     // Start Mongoose serving context thread
 	mg_set_option(ctx, "root", ".");  // Set document root
-	mg_set_option(ctx, "ports", portStream.str().c_str());    // Listen on port XXXX
+	mg_set_option(ctx, "ports", a.c_str());    // Listen on port XXXX
 	this->initCallbacks();
 	
 	/* Now Mongoose is up, running and configured.
@@ -203,10 +202,17 @@ string TransportHTTP::sendRequest(string *callback, const string &message, Node 
 		return string("");
 	
 	//else
-	string cpp_response = string(response);
+	//string cpp_response = string(response);
+	
+	stringstream ss;
+	
+	ss << response;
+	
+	cout << ss.str() << endl;
+	
 	//delete callback;
 	free(response); // we must free the initial char* response, to avoid leaks.
-	return cpp_response;
+	return ss.str();
 }
 
 /*

@@ -41,9 +41,10 @@ public:
 	string connectToTracker(const string &ip, int port, Node *n);
 	
 private:
-	
-	int port;
 	struct mg_context *ctx;
+	
+protected:
+	int myPort;
 };
 
 #endif
