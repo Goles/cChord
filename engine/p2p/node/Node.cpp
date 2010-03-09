@@ -70,5 +70,7 @@ string Node::toString()
 	
 	aStream << ip << "," << nid << "," << port;
 	
+	cout << aStream.str() << endl;
+	
 	return(aStream.str());
 }

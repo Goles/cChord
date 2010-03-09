@@ -56,7 +56,9 @@ void TransportHTTP::startHTTP()
 	/* Now Mongoose is up, running and configured.
 	   Serve until somebody terminates us */
 	
+	cout << "----------------------------------------------------" << endl;
 	cout << "Mongoose Server is running on http://localhost:" << this->getPort() << endl;
+	cout << "----------------------------------------------------" << endl;
 }
 
 //Stops the mongoose HTTP server.
@@ -178,10 +180,13 @@ string TransportHTTP::sendRequest(const string &message, Node *destination)
  *	This function is here to send message to other callbacks of the webserver (in case there are).
  */
 string TransportHTTP::sendRequest(string *callback, const string &message, Node *destination)
-{		
+{	
+	cout << "------------------------" << endl;
+	cout << "Sending HTTP Request" << endl;
 	cout << "\nMessage: " << message << endl;
 	cout << "Callback: " << *callback << endl;
 	cout << "Destination: " << destination->toString() << endl;
+	cout << "------------------------" << endl;
 	
 	char *response = NULL;
 	
@@ -197,8 +202,10 @@ string TransportHTTP::sendRequest(string *callback, const string &message, Node 
 						(char *)message.c_str());
 	
 	//if we have null response from sendPost()
-	if(response == NULL)
-		return string("");
+	if(strcmp(response, "ERROR"))
+	{
+		return "ERROR";
+	}
 	
 	//else
 	//string cpp_response = string(response);

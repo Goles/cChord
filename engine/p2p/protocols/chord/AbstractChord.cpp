@@ -72,6 +72,14 @@ void AbstractChord::stabilize()
 
 	string pred = sendRequest(ss.str(), successor);
 
+	if(pred.compare(string("ERROR")) == 0)
+	{
+		cout << "----------------------------------------------------------------\n";
+		cout << "Peer successor unreachable, this should be handled in the future." << endl;
+		cout << "----------------------------------------------------------------\n" << endl;
+		return;
+	}
+	   
 	if(pred.compare(thisNode->toString()))
 	{
 		Node *x = new Node(pred);

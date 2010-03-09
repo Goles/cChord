@@ -10,6 +10,7 @@
 #include "chord_callbacks.h"
 #include "ProtocolSingleton.h"
 #include "mongoose.h"
+#include <assert.h>
 
 /*
  *	/getpred callback, handles a get_predecessor peer request.
@@ -20,9 +21,14 @@ void call_chord_getpred(struct mg_connection *conn,
 {
 	string result;
 	
-	if(P_SINGLETON->getChordNode()->getPredecessor() != NULL)
+	if(P_SINGLETON->getChordNode() != NULL)
+	{
 		result = P_SINGLETON->getChordNode()->getPredecessor()->toString();
-	
+	}else {
+		
+		assert(P_SINGLETON->getChordNode() == NULL);
+	}
+		
 	//Display answer as a webpage to the peer requesting predecessor
 	mg_printf(conn, "%s", result.c_str());
 

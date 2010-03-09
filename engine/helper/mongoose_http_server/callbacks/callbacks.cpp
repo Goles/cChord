@@ -59,8 +59,9 @@ void call_request_handler(struct mg_connection *conn,
 	switch (message) {
 		case GETPRED:
 			printf("** GETPRED **\n");
-			if(P_SINGLETON->getChordNode()->getPredecessor() != NULL)
+			if(P_SINGLETON->getChordNode() != NULL){
 				result = P_SINGLETON->getChordNode()->getPredecessor()->toString();
+			}
 			break;
 		case FINDSUCC: 
 			printf("** FINDSUCC **\n");

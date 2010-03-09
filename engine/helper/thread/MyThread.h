@@ -44,7 +44,7 @@ public:
 		{
 			while(myNode->getAlive())
 			{
-				cout << "- stabilize -\n";
+				cout << "- Peer stabilizing -\n";
 				myNode->stabilize();
 				myNode->fixFingersTable();
 				myNode->printStatus();

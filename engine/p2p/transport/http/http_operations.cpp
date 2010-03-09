@@ -18,8 +18,6 @@ char* process_http(int sockfd, char *host, char *page, char *poststr)
 	ssize_t n;
 	char sendline[MAXLINE + 1];
 	char *recvline = (char *)malloc(sizeof(char)*(MAXLINE + 1));
-
-	printf("host******: %s", host);
 	
 	snprintf(sendline, MAXSUB,
 			 "POST %s HTTP/1.0\r\n"
@@ -36,9 +34,6 @@ char* process_http(int sockfd, char *host, char *page, char *poststr)
 		printf("Check if socket is writeable.\n");
 		return NULL; 
 	}
-
-//	printf("Recvline %d - MAXLINE %d sockfd %d\n",recvline, MAXLINE, sockfd);
-	
 	
 	while ( ( n = read(sockfd, recvline,  MAXLINE)) != 0 )
 	{
@@ -46,7 +41,7 @@ char* process_http(int sockfd, char *host, char *page, char *poststr)
 	}
 	
 	//For debugging you can view the HTML response etc with this.
-	printf("**** BACK FROM THE POST ****\n\n %s\n\n", recvline);
+	printf("\n--- BACK FROM THE POST REQUEST-- \n%s\n", recvline);
 	
 	return recvline; //this must be freed by the receiver!! ( allocated here! )
 }
@@ -64,10 +59,10 @@ char* sendPost(char *hostName, int port, char *page, char *postString)
 	//TODO: Still have to make all the checks if connect fails etc.
 	if ((hptr = gethostbyname(hostName)) == NULL) {
 		fprintf(stderr, " gethostbyname error for host: %s: %s", hostName, hstrerror(h_errno));
-		return 0; //false
+		return (char *)"ERROR"; //false
 	}
    
-	printf("hostname: %s\n", hptr->h_name);
+	//printf("hostname: %s\n", hptr->h_name);
    
 	if (hptr->h_addrtype == AF_INET && (pptr = hptr->h_addr_list) != NULL) {
 		//printf("address: %s\n", inet_ntop(hptr->h_addrtype, *pptr, str, sizeof(str)));
