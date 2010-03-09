@@ -25,6 +25,7 @@ TransportHTTP::TransportHTTP(int port)
 {
 	//Constructor.
 	this->setPort(port);
+	myPort = port;
 	
 	//Initialize the webserver
 	this->startHTTP();
