@@ -1,5 +1,5 @@
 /*
- *  Message.cpp
+ *  Request.cpp
  *  P2P_Engine
  *
  *  Created by LogNet team 2010 - INRIA

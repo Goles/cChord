@@ -21,6 +21,7 @@
 #include "Node.h"
 #include "ChordTransportCode.h"
 #include "IOverlay.h"
+#include "Request.h"
 #include <vector>
 #include <map>
 
@@ -47,7 +48,7 @@ public:
 	void			getObjectOnJoin(Node* n);
 	
 	/*Abstract Methods*/
-	virtual string sendRequest(string message, Node* destination) = 0;
+	virtual string sendRequest(Request *request, Node* destination) = 0;
 	
 	/*Display*/
 	string toString();
