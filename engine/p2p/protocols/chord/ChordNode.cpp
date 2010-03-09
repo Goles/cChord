@@ -67,6 +67,9 @@ void ChordNode::initializer(const string &ip, int port, const string &overlayInt
 
 	//Transform the SHA-1 String to an integer.
 	unsigned int id = sha1ToInt(out);
+
+	//call default initializer
+	this->initializer(ip, port, overlayIntifier, id);
 }
 
 void ChordNode::initializer(const string &ip, int port, const string &overlayIntifier, unsigned int id)
@@ -97,10 +100,8 @@ void ChordNode::initializer(const string &ip, int port, const string &overlayInt
 /*
  *	Forward a message to a peer, the message is in the format: "<IP+PORT>,TRANSPORT_CODE"
  */
-string ChordNode::forward(string message, Node* destination)
-{	
-	printf("host******:");
-	
+string ChordNode::sendRequest(string message, Node* destination)
+{
 	stringstream ss_message (stringstream::in | stringstream::out);
 	
 	//form the message "Node_identifier,message" format.

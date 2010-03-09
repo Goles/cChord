@@ -21,11 +21,10 @@
 /*
  * Constructor & Destructor.
  */
-TransportHTTP::TransportHTTP(int inPort)
+TransportHTTP::TransportHTTP(int port)
 {
 	//Constructor.
-	this->setPort(inPort);
-	myPort = inPort;
+	this->setPort(port);
 	
 	//Initialize the webserver
 	this->startHTTP();
@@ -126,10 +125,9 @@ string TransportHTTP::connectToTracker(const string &ip, int port, Node *n)
  */
 string TransportHTTP::sendRequest(const string &message, Node *destination)
 {	
-	int a = atoi(message.c_str());
+	int a = atoi(message.c_str()); // <= BUG TO FIX
 	
 	string *callback;
-	
 	
 	//We need to forge the corresponding callback string for the message passed.
 	

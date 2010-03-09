@@ -23,7 +23,7 @@ void AbstractChord::initialise(string ip, int id, int port)
 	next		= 0; // C++ we have to set next to zero to avoid possible garbage...
 	alive		= true;
 	spacesize	= 10;
-	timeToCheck	= 10;
+	timeToCheck	= 1;
 
 	for(int i = 0; i < spacesize; i++)
 	{
@@ -45,13 +45,13 @@ Node* AbstractChord::findSuccessor(int id)
 	stringstream ss (stringstream::in | stringstream::out);
 	ss << FINDSUCC << "," << id;
 
-	string succ = forward(ss.str(), pred);
+	string succ = sendRequest(ss.str(), pred);
 	return new Node(succ);
 }
 
 Node* AbstractChord::closestPrecedingNode(int nid)
 {
-	// optimisation
+	// optimization
 	if(thisNode == successor) {
 		return thisNode;
 	}
@@ -66,12 +66,12 @@ Node* AbstractChord::closestPrecedingNode(int nid)
 
 void AbstractChord::stabilize()
 {
-	//Forge the message that we will forward (GETPRED)
+	//Forge the message that we will sendRequest (GETPRED)
 	stringstream ss (stringstream::in | stringstream::out);
 	ss << GETPRED;
 
-	string pred = forward(ss.str(), successor);
-	
+	string pred = sendRequest(ss.str(), successor);
+
 	if(pred.compare(thisNode->toString()))
 	{
 		Node *x = new Node(pred);
@@ -82,7 +82,7 @@ void AbstractChord::stabilize()
 
 		ss1 << NOTIF << "," << thisNode;
 
-		forward(ss1.str(), successor); //TODO: Ask About this. 
+		sendRequest(ss1.str(), successor); //TODO: Ask About this.
 	}
 }
 
