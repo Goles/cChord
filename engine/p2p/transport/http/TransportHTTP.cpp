@@ -197,7 +197,7 @@ string TransportHTTP::sendRequest(string *callback, Request *request, Node *dest
 						(char *)request->serialize().c_str());
 	
 	//if we have null response from sendPost()
-	if(strcmp(response, "ERROR"))
+	if(strcmp(response, "ERROR") == 0)
 	{
 		return "ERROR";
 	}

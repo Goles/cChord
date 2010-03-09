@@ -38,7 +38,7 @@
 // MongooseDaemon is a small wrapper to make ingetrating mongoose
 // with iPhone apps super easy
 
-#ifdef OSX
+#ifdef IPHONE
 
 #import "MongooseDaemon.h"
 #import	"callbacks.h"

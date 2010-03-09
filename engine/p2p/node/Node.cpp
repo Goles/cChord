@@ -8,6 +8,7 @@
  */
 
 #include "Node.h"
+#include "Request.h"
 #include <iostream>
 #include <sstream>
 
@@ -66,11 +67,18 @@ bool Node::equals(Node *aNode)
 
 string Node::toString()
 {
-	stringstream aStream (stringstream::in | stringstream::out);
+	ostringstream ss;
 	
-	aStream << ip << "," << nid << "," << port;
+	char portBuffer[255];
+	char nidBuffer[255];
 	
-	cout << aStream.str() << endl;
+	sprintf(portBuffer, "%d", port);
+	sprintf(nidBuffer, "%d", nid);
 	
-	return(aStream.str());
+	string portS(portBuffer);
+	string nidS(nidBuffer);
+	
+	ss << ip << "," << nidS << "," << portS;
+	
+	return(ss.str());
 }

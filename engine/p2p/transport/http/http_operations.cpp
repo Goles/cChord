@@ -41,7 +41,7 @@ char* process_http(int sockfd, char *host, char *page, char *poststr)
 	}
 	
 	//For debugging you can view the HTML response etc with this.
-	printf("\n--- BACK FROM THE POST REQUEST-- \n%s\n", recvline);
+	printf("\n--- BACK FROM THE POST REQUEST-- \n");
 	
 	return recvline; //this must be freed by the receiver!! ( allocated here! )
 }

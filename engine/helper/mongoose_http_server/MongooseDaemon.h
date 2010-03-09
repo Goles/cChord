@@ -1,4 +1,4 @@
-#ifdef OSX //if we are building for OSX/IPHONE.
+#ifdef IPHONE //if we are building for OSX/IPHONE.
 
 #ifndef MONGOOSE_DAEMON_H
 #define MONGOOSE_DAEMON_H

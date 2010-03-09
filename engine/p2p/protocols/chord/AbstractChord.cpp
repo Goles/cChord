@@ -71,7 +71,7 @@ void AbstractChord::stabilize()
 	//Forge the message that we will sendRequest (GETPRED)
 	Request *request = new Request(this->getIdentifier(), GETPRED, "");
 	string pred = sendRequest(request, successor);
-
+	
 	if(pred.compare(string("ERROR")) == 0)
 	{
 		cout << "----------------------------------------------------------------\n";
