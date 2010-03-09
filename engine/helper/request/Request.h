@@ -1,5 +1,5 @@
 /*
- *  Message.h
+ *  Request.h
  *  P2P_Engine
  *
  *  Created by LogNet team 2010 - INRIA
@@ -15,9 +15,14 @@
 using std::string;
 using std::stringstream;
 
+/*
+ * Request format:
+ * <OverlayID>,<RequestCode>[,<args>]*
+ *
+ * RequestCode depend of the overlay.
+ * Example with chord: see ChordTransportCode.h
+ */
 class Request {
-
-
 
 public:
 	/* CONSTRUCTOR */
