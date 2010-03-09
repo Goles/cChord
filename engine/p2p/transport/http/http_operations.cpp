@@ -8,17 +8,19 @@
  */
 
 #include "http_operations.h"
-#include <sys/stat.h>
+#include <iostream>
+#include <fstream>
 
 char* process_http(int sockfd, char *host, char *page, char *poststr)
 {
 	//This is to avoid application crash when we perform write() or read.
 	signal(SIGPIPE, SIG_IGN);
-
 	ssize_t n;
 	char sendline[MAXLINE + 1];
 	char *recvline = (char *)malloc(sizeof(char)*(MAXLINE + 1));
 
+	printf("host******: %s", host);
+	
 	snprintf(sendline, MAXSUB,
 			 "POST %s HTTP/1.0\r\n"
 			 "Host: %s\r\n"
@@ -27,15 +29,20 @@ char* process_http(int sockfd, char *host, char *page, char *poststr)
 			 "%s", 
 			 page, host, (int)strlen(poststr), poststr);
 	
+
 	if(write(sockfd, sendline, sizeof(sendline)) == -1)
 	{
 		printf("Failed to write to socket! \n");
 		printf("Check if socket is writeable.\n");
 		return NULL; 
 	}
+
+//	printf("Recvline %d - MAXLINE %d sockfd %d\n",recvline, MAXLINE, sockfd);
 	
-	while ((n = read(sockfd, recvline, MAXLINE)) > 0) {
-		recvline[n] = '\0';
+	
+	while ( ( n = read(sockfd, recvline,  MAXLINE)) != 0 )
+	{
+		recvline[n]='\0'; 	
 	}
 	
 	//For debugging you can view the HTML response etc with this.
@@ -50,7 +57,7 @@ char* sendPost(char *hostName, int port, char *page, char *postString)
 	struct sockaddr_in servaddr;
 	
 	char **pptr;
-	char *response;
+	char *response = NULL;
 	char str[50];
 	struct hostent *hptr;
 	
@@ -60,7 +67,7 @@ char* sendPost(char *hostName, int port, char *page, char *postString)
 		return 0; //false
 	}
    
-	//printf("hostname: %s\n", hptr->h_name);
+	printf("hostname: %s\n", hptr->h_name);
    
 	if (hptr->h_addrtype == AF_INET && (pptr = hptr->h_addr_list) != NULL) {
 		//printf("address: %s\n", inet_ntop(hptr->h_addrtype, *pptr, str, sizeof(str)));
@@ -68,8 +75,9 @@ char* sendPost(char *hostName, int port, char *page, char *postString)
 	} else {
 		fprintf(stderr, "Error call inet_ntop \n");
 	}
-   
+	
 	sockfd = socket(AF_INET, SOCK_STREAM, 0);
+	
 	bzero(&servaddr, sizeof(servaddr));
 	servaddr.sin_family = AF_INET;
 	servaddr.sin_port = htons(port);

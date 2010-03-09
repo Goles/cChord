@@ -10,10 +10,7 @@
 #include <errno.h>
 
 #include <time.h>
-
-#ifdef OSX
-	#include "TimeHelper.h"
-#endif
+#include "TimeHelper.h"
 
 #include "Thread.h"
 

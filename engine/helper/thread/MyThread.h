@@ -44,9 +44,9 @@ public:
 		{
 			while(myNode->getAlive())
 			{
-//				cout << "- stabilize -\n";
+				cout << "- stabilize -\n";
 				myNode->stabilize();
-//				myNode->fixFingersTable();
+				myNode->fixFingersTable();
 				myNode->printStatus();
 				this->sleep(myNode->getTimeToCheck());
 			}			
