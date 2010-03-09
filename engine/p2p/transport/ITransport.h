@@ -16,11 +16,12 @@
 
 #include <string>
 #include "Node.h"
+#include "Request.h"
 
 class ITransport
 {
 public:
-	virtual string	sendRequest(const string &message, Node *destination) = 0;
+	virtual string	sendRequest(Request *request, Node *destination) = 0;
 	virtual	string	connectToTracker(const string &ip, int port, Node *n) = 0;
 	int				getPort() { return port; }
 	void			setPort( int p ) { port = p; }

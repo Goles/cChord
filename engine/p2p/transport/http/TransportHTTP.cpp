@@ -14,6 +14,7 @@
 #include "ChordNode.h"
 #include "IOverlay.h"
 #include "callbacks.h"
+#include "Request.h"
 #include <arpa/inet.h>
 #include <sstream>
 #include <iostream>
@@ -124,15 +125,12 @@ string TransportHTTP::connectToTracker(const string &ip, int port, Node *n)
 /*
  * Abstract member function Implementation.
  */
-string TransportHTTP::sendRequest(const string &message, Node *destination)
+string TransportHTTP::sendRequest(Request *request, Node *destination)
 {	
-	int a = atoi(message.c_str()); // <= BUG TO FIX
-	
 	string *callback;
 	
 	//We need to forge the corresponding callback string for the message passed.
-	
-	switch (a) {
+	switch (request->getCode()) {
 		case GETPRED:
 			callback = new string("/getpred");
 			break;
@@ -167,21 +165,21 @@ string TransportHTTP::sendRequest(const string &message, Node *destination)
 			
 		default:
 			cout << " UNHANDLED CHORD TRANSPORT CODE! ... ASSERTING" << endl;
-			assert(a);
+			assert(request->getCode());
 			break;
 	}
 	
-	return(this->sendRequest(callback, message, destination));
+	return(this->sendRequest(callback, request, destination));
 }
 
 /*
  *	This function is here to send message to other callbacks of the webserver (in case there are).
  */
-string TransportHTTP::sendRequest(string *callback, const string &message, Node *destination)
+string TransportHTTP::sendRequest(string *callback, Request *request, Node *destination)
 {		
-	cout << "\nMessage: " << message << endl;
-	cout << "Callback: " << *callback << endl;
-	cout << "Destination: " << destination->toString() << endl;
+//	cout << "\nMessage: " << message << endl;
+//	cout << "Callback: " << *callback << endl;
+//	cout << "Destination: " << destination->toString() << endl;
 	
 	char *response = NULL;
 	
@@ -194,7 +192,7 @@ string TransportHTTP::sendRequest(string *callback, const string &message, Node 
 	response = sendPost((char *)(destination->getIp()).c_str(), 
 						destination->getPort(), 
 						(char *)callback->c_str(), 
-						(char *)message.c_str());
+						(char *)request->serialize().c_str());
 	
 	//if we have null response from sendPost()
 	if(response == NULL)

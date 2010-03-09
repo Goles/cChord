@@ -19,15 +19,15 @@ char* process_http(int sockfd, char *host, char *page, char *poststr)
 	char sendline[MAXLINE + 1];
 	char *recvline = (char *)malloc(sizeof(char)*(MAXLINE + 1));
 
-	printf("host******: %s", host);
-	
-	snprintf(sendline, MAXSUB,
-			 "POST %s HTTP/1.0\r\n"
-			 "Host: %s\r\n"
-			 "Content-type: application/x-www-form-urlencoded\r\n"
-			 "Content-length: %d\r\n\r\n"
-			 "%s", 
-			 page, host, (int)strlen(poststr), poststr);
+//	printf("host******: %s\n", host);
+//
+//	snprintf(sendline, MAXSUB,
+//			 "POST %s HTTP/1.0\r\n"
+//			 "Host: %s\r\n"
+//			 "Content-type: application/x-www-form-urlencoded\r\n"
+//			 "Content-length: %d\r\n\r\n"
+//			 "%s",
+//			 page, host, (int)strlen(poststr), poststr);
 	
 
 	if(write(sockfd, sendline, sizeof(sendline)) == -1)
@@ -46,7 +46,7 @@ char* process_http(int sockfd, char *host, char *page, char *poststr)
 	}
 	
 	//For debugging you can view the HTML response etc with this.
-	printf("**** BACK FROM THE POST ****\n\n %s\n\n", recvline);
+//	printf("**** BACK FROM THE POST ****\n\n %s\n\n", recvline);
 	
 	return recvline; //this must be freed by the receiver!! ( allocated here! )
 }
@@ -67,7 +67,7 @@ char* sendPost(char *hostName, int port, char *page, char *postString)
 		return 0; //false
 	}
    
-	printf("hostname: %s\n", hptr->h_name);
+//	printf("hostname: %s\n", hptr->h_name);
    
 	if (hptr->h_addrtype == AF_INET && (pptr = hptr->h_addr_list) != NULL) {
 		//printf("address: %s\n", inet_ntop(hptr->h_addrtype, *pptr, str, sizeof(str)));

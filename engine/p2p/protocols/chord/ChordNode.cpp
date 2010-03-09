@@ -100,14 +100,9 @@ void ChordNode::initializer(const string &ip, int port, const string &overlayInt
 /*
  *	Forward a message to a peer, the message is in the format: "<IP+PORT>,TRANSPORT_CODE"
  */
-string ChordNode::sendRequest(string message, Node* destination)
+string ChordNode::sendRequest(Request *request, Node* destination)
 {
-	stringstream ss_message (stringstream::in | stringstream::out);
-	
-	//form the message "Node_identifier,message" format.
-	ss_message << this->getIdentifier() << "," << message;
-	
-	return transport->sendRequest(ss_message.str(), destination);
+	return transport->sendRequest(request, destination);
 }
 
 /*

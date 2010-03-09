@@ -10,8 +10,9 @@
 #include <errno.h>
 
 #include <time.h>
-#include "TimeHelper.h"
-
+#ifdef OSX
+	#include "TimeHelper.h"
+#endif
 #include "Thread.h"
 
 #define u_int int

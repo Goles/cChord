@@ -41,11 +41,13 @@ Node* AbstractChord::findSuccessor(int id)
 
 	Node *pred = closestPrecedingNode(id);
 
-	/*Craft String*/
-	stringstream ss (stringstream::in | stringstream::out);
-	ss << FINDSUCC << "," << id;
+	//Forge the message that we will sendRequest (FINDSUCC)
+    std::ostringstream oss;
+    oss << id;
+    std::string idStr = oss.str();
+	Request *request = new Request(this->getIdentifier(), FINDSUCC, idStr);
 
-	string succ = sendRequest(ss.str(), pred);
+	string succ = sendRequest(request, pred);
 	return new Node(succ);
 }
 
@@ -67,10 +69,8 @@ Node* AbstractChord::closestPrecedingNode(int nid)
 void AbstractChord::stabilize()
 {
 	//Forge the message that we will sendRequest (GETPRED)
-	stringstream ss (stringstream::in | stringstream::out);
-	ss << GETPRED;
-
-	string pred = sendRequest(ss.str(), successor);
+	Request *request = new Request(this->getIdentifier(), GETPRED, "");
+	string pred = sendRequest(request, successor);
 
 	if(pred.compare(thisNode->toString()))
 	{
@@ -78,11 +78,9 @@ void AbstractChord::stabilize()
 		if(insideRange(x->getId(), thisNode->getId() + 1, successor->getId() - 1))
 		   successor = x;
 
-		stringstream ss1 (stringstream::in | stringstream::out);
-
-		ss1 << NOTIF << "," << thisNode;
-
-		sendRequest(ss1.str(), successor); //TODO: Ask About this.
+		//Forge the message that we will sendRequest (NOTIF)
+		request = new Request(this->getIdentifier(), NOTIF, thisNode->toString());
+		sendRequest(request, successor);
 	}
 }
 

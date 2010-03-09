@@ -26,8 +26,8 @@ public:
 	~TransportHTTP();
 	
 	//API methods
-	string	sendRequest(const string &message, Node *destination);
-	string	sendRequest(string *callback, const string &message, Node *destination); //To override the sendReq pure virtual
+	string	sendRequest(Request *request, Node *destination);
+	string	sendRequest(string *callback, Request *request, Node *destination); //To override the sendReq pure virtual
 	string	sendTrackerRequest(const string &host, int port, const string &callback);
 	string	doStuff(const string &code);
 	void	test();
