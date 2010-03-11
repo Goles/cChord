@@ -20,6 +20,11 @@ Node::Node(const string &inIp, unsigned int inId, int inPort)
 	ip		= inIp;
 	nid		= inId;
 	port	= inPort;
+	
+	//Transform the nid into a string for later usage.
+	char nidBuffer[255];	
+	sprintf(nidBuffer, "%d", nid);
+	nidS = string(nidBuffer);
 }
 
 Node::Node(const string &inIp, int inPort)
@@ -27,6 +32,11 @@ Node::Node(const string &inIp, int inPort)
 	ip		= inIp;
 	nid		= 0;
 	port	= inPort;
+	
+	//Transform the nid into a string for later usage.
+	char nidBuffer[255];	
+	sprintf(nidBuffer, "%d", nid);
+	nidS = string(nidBuffer);
 }
 
 Node::Node(const string &inData)
@@ -51,6 +61,7 @@ Node::Node(const string &inData)
 	string ip(ipStream.str());
 }
 
+
 /*
  *	Action Methods
  */
@@ -70,13 +81,13 @@ string Node::toString()
 	ostringstream ss;
 	
 	char portBuffer[255];
-	char nidBuffer[255];
+//	char nidBuffer[255];
 	
 	sprintf(portBuffer, "%d", port);
-	sprintf(nidBuffer, "%d", nid);
+//	sprintf(nidBuffer, "%d", nid);
 	
 	string portS(portBuffer);
-	string nidS(nidBuffer);
+//	string nidS(nidBuffer);
 	
 	ss << ip << "," << nidS << "," << portS;
 	

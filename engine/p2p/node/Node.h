@@ -29,6 +29,8 @@ public:
 	//Getters & Setters
 	unsigned int 	getId() { return nid; }
 	void			setId(unsigned  int inId) { nid = inId; }
+	string			getIdString(){ return nidS; }
+	void			setIdString(const string &s) { nidS = string(s); }
 	string			getIp(){ return ip; }
 	void			setIp(const std::string inIp) { ip = inIp; }
 	unsigned int	getNid() { return nid; }
@@ -39,7 +41,9 @@ public:
 private:
 	string			ip;
 	unsigned int	nid; //node id (nid), "id" is reserved keyword in Cocoa.
+	string			nidS;
 	int				port;
+	
 };
 
 #endif

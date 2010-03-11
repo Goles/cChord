@@ -10,6 +10,7 @@
 #include "chord_callbacks.h"
 #include "ProtocolSingleton.h"
 #include "mongoose.h"
+#include "http_operations.h"
 #include <assert.h>
 
 /*
@@ -41,7 +42,18 @@ void call_chord_findsucc(struct mg_connection *conn,
 						 const struct mg_request_info *request_info,
 						 void *user_data)
 {
-	//
+	string result;
+	char *id = NULL;
+	
+	//assert(mg_get_var(conn, "overlay_id") != NULL); <== NEEDS TO BE DONE BEFORE!!! XD
+	assert((id = mg_get_var(conn, "id")) != NULL);
+	
+	result = P_SINGLETON->getChordNode()->findSuccessor(atoi(id))->toString();
+
+	mg_printf(conn, result.c_str());
+	
+	//Release the allocated memory for id variable.
+	mg_free(id);
 }
 
 /*

@@ -27,7 +27,6 @@ public:
 	
 	//API methods
 	string	sendRequest(Request *request, Node *destination);
-	string	sendRequest(string *callback, Request *request, Node *destination); //To override the sendReq pure virtual
 	string	sendTrackerRequest(const string &host, int port, const string &callback);
 	string	doStuff(const string &code);
 	void	test();

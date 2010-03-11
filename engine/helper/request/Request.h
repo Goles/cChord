@@ -7,13 +7,21 @@
  *
  */
 
-#ifndef MESSAGE_H
-#define MESSAGE_H
+#ifndef REQUEST_H
+#define REQUEST_H
 
+#include <map>
 #include <string>
+#include <sstream>
+#include <iostream>
+#include <assert.h>
 
+using std::endl;
+using std::cout;
 using std::string;
 using std::stringstream;
+using std::map;
+using std::ostringstream;
 
 /*
  * Request format:
@@ -22,29 +30,35 @@ using std::stringstream;
  * RequestCode depend of the overlay.
  * Example with chord: see ChordTransportCode.h
  */
+
 class Request {
 
 public:
 	/* CONSTRUCTOR */
-	Request(string overlayID, int code, string request);
+	Request(string overlayID, int code);
 
 	/* GETTER */
-	int 	getCode() const { return code; }
-	string 	getRequest() const { return request; }
-	string 	getOverlayID() const { return overlayID; }
+	int				getCode() const { return code; }
+	string			getOverlayID() const { return overlayID; }
 
 	/* SETTER */
 	void setCode(int code) { this->code = code; }
-	void setRequest(string request) { this->request = request; }
 	void setOverlayID(string overlayID) { this->overlayID = overlayID; }
-
-	/* Serialization */
-	string serialize(void);
+	
+	/*Methods*/
+	void			addArg(string key, string value);
+	string			getArg(string key);
+	string			serialize();
+	
 
 private:
+	typedef std::pair<string, string> arg;
+	typedef	std::map<string, string> argMap;
+	
 	string 	overlayID; // Overlay Identifier
 	int		code; // see ChordTransportCode.h
-	string 	request; // request content (can be empty)
+	
+	argMap arguments;
 };
 
 #endif

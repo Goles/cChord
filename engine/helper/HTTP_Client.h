@@ -11,9 +11,9 @@
 #define HTTP_CLIENT_H
 
 /*
- *	This function should perform a GET command and return a char*
+ *	This function should perform a GET request and return a char*
  *	with the HTML asociated to the page requested.
- *  host : 127.0.0.1  page /index.html
+ *  ex: http_get("127.0.0.1",80,"/index.html");
  */
 char* http_get(char *host, int port, char *page);
 

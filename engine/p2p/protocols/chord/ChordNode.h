@@ -26,16 +26,21 @@ using namespace std;
 class ChordNode : public AbstractChord
 {	
 public:
+	/*Constructor & Desstructor*/
 	ChordNode(const string &ip, int port);
 	ChordNode(const string &ip, int port, const string &s);
 	ChordNode(const string &ip, int port, const string &s, unsigned int id); // To test you can define the id manually
 	~ChordNode();
+	
+	/*Init*/
 	void initializer(const string &ip, int port, const string &overlayIntifier); 		 // Initialization which use SHA-1
 	void initializer(const string &ip, int port, const string &overlayIntifier, unsigned int id); // Initialization by default
 	
-	void			setIdentifier(const string &iD) { overlayIntifier = iD; }
-	void			setTransport(TransportHTTP *t) { transport = t; }
+	/*Setters*/
+	void setIdentifier(const string &iD) { overlayIntifier = iD; }
+	void setTransport(TransportHTTP *t) { transport = t; }
 	
+	/*Action Methods*/
 	virtual string	sendRequest(Request *request, Node* destination);
 	virtual void	checkStable();
 	
@@ -74,10 +79,6 @@ public:
 		return "";
 	}
 	
-	void join(string host, int port)
-	{
-		
-	}
 	
 protected:
 	TransportHTTP*	transport;

@@ -8,9 +8,11 @@
  */
 
 #include "AbstractChord.h"
+#include "ProtocolSingleton.h"
 #include <math.h>
 #include <iostream>
 #include <sstream>
+#include <vector>
 
 // /////////////////////////////////////////// //
 //                  INITIALISE                 //
@@ -23,7 +25,7 @@ void AbstractChord::initialise(string ip, int id, int port)
 	next		= 0; // C++ we have to set next to zero to avoid possible garbage...
 	alive		= true;
 	spacesize	= 10;
-	timeToCheck	= 1;
+	timeToCheck	= 5;
 
 	for(int i = 0; i < spacesize; i++)
 	{
@@ -43,11 +45,14 @@ Node* AbstractChord::findSuccessor(int id)
 
 	//Forge the message that we will sendRequest (FINDSUCC)
     std::ostringstream oss;
-    oss << id;
-    std::string idStr = oss.str();
-	Request *request = new Request(this->getIdentifier(), FINDSUCC, idStr);
-
+	oss << id;
+	
+	//Create a request.
+	Request *request = new Request(this->getIdentifier(), FINDSUCC);
+	request->addArg("id", oss.str());
+		
 	string succ = sendRequest(request, pred);
+	
 	return new Node(succ);
 }
 
@@ -66,18 +71,34 @@ Node* AbstractChord::closestPrecedingNode(int nid)
 	return successor;
 }
 
+void AbstractChord::join(Node* chord)
+{		
+	//Forge the actual request.
+	Request *request = new Request(this->getIdentifier(), FINDSUCC);
+	request->addArg("overlay_id", this->getIdentifier());
+	request->addArg("id", thisNode->getIdString());
+	
+	cout << "IDENTIFIER : " << this->getIdentifier();
+	
+	
+	//Send the request.
+	string succ = this->sendRequest(request, chord);
+	
+	cout << "SUCCESSOR : " << succ << endl;
+}
+
 void AbstractChord::stabilize()
 {
 	//Forge the message that we will sendRequest (GETPRED)
-	Request *request = new Request(this->getIdentifier(), GETPRED, "");
-	string pred = sendRequest(request, successor);
+	Request *pred_request = new Request(this->getIdentifier(), GETPRED);
+	string pred = sendRequest(pred_request, successor);
 	
 	if(pred.compare(string("ERROR")) == 0)
 	{
 		cout << "----------------------------------------------------------------\n";
 		cout << "Peer successor unreachable, this should be handled in the future." << endl;
 		cout << "----------------------------------------------------------------\n" << endl;
-		return;
+		assert(0);
 	}
 	   
 	if(pred.compare(thisNode->toString()))
@@ -85,10 +106,11 @@ void AbstractChord::stabilize()
 		Node *x = new Node(pred);
 		if(insideRange(x->getId(), thisNode->getId() + 1, successor->getId() - 1))
 		   successor = x;
-
+		
 		//Forge the message that we will sendRequest (NOTIF)
-		request = new Request(this->getIdentifier(), NOTIF, thisNode->toString());
-		sendRequest(request, successor);
+		Request *notif_request = new Request(this->getIdentifier(), NOTIF);
+		notif_request->addArg("id", thisNode->getIdString());
+		sendRequest(notif_request, successor);
 	}
 }
 

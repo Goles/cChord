@@ -39,7 +39,7 @@ public:
 	Node*			findSuccessor(int id);
 	Node*			closestPrecedingNode(int id);
 	void			join(Node* chord);
-	void			join(const string &host, int port);
+//	void			join(const string &host, int port);
 	void			stabilize();
 	void			notify(Node* n);
 	void			fixFingersTable();

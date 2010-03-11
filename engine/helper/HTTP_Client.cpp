@@ -23,9 +23,6 @@ char *get_ip(char *host);
 char *build_get_query(char *host, char *page);
 void usage();
 
-#define HOST "coding.debuntu.org"
-#define PAGE "/"
-#define PORT 80
 #define USERAGENT "HTMLGET 1.0"
 
 char* http_get(char *host, int port, char *page)
@@ -109,14 +106,6 @@ char* http_get(char *host, int port, char *page)
 	return htmlcontent;
 }
 
-void usage()
-{
-	fprintf(stderr, "USAGE: htmlget host [page]\n\
-			\thost: the website hostname. ex: coding.debuntu.org\n\
-			\tpage: the page to retrieve. ex: index.html, default: /\n");
-}
-
-
 int create_tcp_socket()
 {
 	int sock;
@@ -151,7 +140,7 @@ char *build_get_query(char *host, char *page)
 {
 	char *query;
 	char *getpage = page;
-	char *tpl = "GET /%s HTTP/1.0\r\nHost: %s\r\nUser-Agent: %s\r\n\r\n";
+	char *tpl = (char *)"GET /%s HTTP/1.0\r\nHost: %s\r\nUser-Agent: %s\r\n\r\n";
 	if(getpage[0] == '/'){
 		getpage = getpage + 1;
 		fprintf(stderr,"Removing leading \"/\", converting %s to %s\n", page, getpage);

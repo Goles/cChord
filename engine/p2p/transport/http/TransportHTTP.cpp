@@ -15,6 +15,7 @@
 #include "IOverlay.h"
 #include "callbacks.h"
 #include "Request.h"
+#include "ProtocolSingleton.h"
 #include <arpa/inet.h>
 #include <sstream>
 #include <iostream>
@@ -69,6 +70,7 @@ void TransportHTTP::stopHTTP()
 	cout << "Mongoose Server is now stopped" << endl;
 }
 
+//Init the mongoose HTTP server callbacks.
 void TransportHTTP::initCallbacks()
 {
 	if(ctx != NULL)
@@ -129,60 +131,6 @@ string TransportHTTP::connectToTracker(const string &ip, int port, Node *n)
  */
 string TransportHTTP::sendRequest(Request *request, Node *destination)
 {	
-	string *callback;
-	
-	//We need to forge the corresponding callback string for the message passed.
-	switch (request->getCode()) {
-		case GETPRED:
-			callback = new string("/getpred");
-			break;
-			
-		case FINDSUCC:
-			callback = new string("/findsucc");
-			break;
-			
-		case NOTIF:
-			callback = new string("/notif");
-			break;
-		
-		case JOIN:
-			callback = new string("/join");
-			break;
-		
-		case PUT:
-			callback = new string("/put");
-			break;
-		
-		case GET:
-			callback = new string("/get");
-			break;
-
-		case SETSUCC:
-			callback = new string("/setsucc");
-			break;
-			
-		case SETPRED:
-			callback = new string("/setpred");
-			break;
-			
-		default:
-			cout << " UNHANDLED CHORD TRANSPORT CODE! ... ASSERTING" << endl;
-			assert(request->getCode());
-			break;
-	}
-	
-	return(this->sendRequest(callback, request, destination));
-}
-
-/*
- *	This function is here to send message to other callbacks of the webserver (in case there are).
- */
-string TransportHTTP::sendRequest(string *callback, Request *request, Node *destination)
-{		
-//	cout << "\nMessage: " << message << endl;
-//	cout << "Callback: " << *callback << endl;
-//	cout << "Destination: " << destination->toString() << endl;
-	
 	char *response = NULL;
 	
 	/*
@@ -193,17 +141,12 @@ string TransportHTTP::sendRequest(string *callback, Request *request, Node *dest
 	
 	response = sendPost((char *)(destination->getIp()).c_str(), 
 						destination->getPort(), 
-						(char *)callback->c_str(), 
-						(char *)request->serialize().c_str());
+						(char *)request->serialize().c_str(), 
+						(char *)""); //for now the POST content is empty.
 	
 	//if we have null response from sendPost()
 	if(strcmp(response, "ERROR") == 0)
-	{
 		return "ERROR";
-	}
-	
-	//else
-	//string cpp_response = string(response);
 	
 	stringstream ss;
 	
@@ -215,6 +158,7 @@ string TransportHTTP::sendRequest(string *callback, Request *request, Node *dest
 	free(response); // we must free the initial char* response, to avoid leaks.
 	return ss.str();
 }
+
 
 /*
  *	Since the tracker can only present HTML responses (for now) and not tweak
