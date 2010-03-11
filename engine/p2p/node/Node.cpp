@@ -15,7 +15,7 @@
 /*
  *	Constructors
  */
-Node::Node(const string &inIp, unsigned int inId, int inPort)
+Node::Node(const string &inIp, unsigned int inId, unsigned int inPort)
 {
 	ip		= inIp;
 	nid		= inId;
@@ -27,7 +27,7 @@ Node::Node(const string &inIp, unsigned int inId, int inPort)
 	nidS = string(nidBuffer);
 }
 
-Node::Node(const string &inIp, int inPort)
+Node::Node(const string &inIp, unsigned int inPort)
 {
 	ip		= inIp;
 	nid		= 0;
@@ -43,29 +43,36 @@ Node::Node(const string &inData)
 {
 	stringstream ss(inData);
 	stringstream ipStream (stringstream::in | stringstream::out);
-	
+
 	int ipa,
 		ipb,
 		ipc,
 		ipd;
-	
+
 	char ch;
-	
+
 	int inID;
 	int inPort;
-	
-	ss >> ipa >> ch >> ipb >> ch >> ipc >> ch >> ipd >> ch >> inID >> ch >> inPort;
-	
-	ipStream << ipa << "." << ipb << "." << ipc << "." << ipd;
-	
-	string ip(ipStream.str());
-}
 
+	ss >> ipa >> ch >> ipb >> ch >> ipc >> ch >> ipd >> ch >> inID >> ch >> inPort;
+
+	ipStream << ipa << "." << ipb << "." << ipc << "." << ipd;
+
+	string ip(ipStream.str());
+
+	this->ip = ip;
+	this->nid = inID;
+	this->port = inPort;
+
+	//Transform the nid into a string for later usage.
+	char nidBuffer[255];
+	sprintf(nidBuffer, "%d", nid);
+	nidS = string(nidBuffer);
+}
 
 /*
  *	Action Methods
  */
-
 bool Node::equals(Node *aNode)
 {
 	if(aNode != NULL)
@@ -93,3 +100,4 @@ string Node::toString()
 	
 	return(ss.str());
 }
+

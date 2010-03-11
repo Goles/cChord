@@ -44,11 +44,12 @@ public:
 		{
 			while(myNode->getAlive())
 			{
-				cout << "- Peer stabilizing -\n";
 				myNode->stabilize();
 				myNode->fixFingersTable();
 				myNode->printStatus();
-				this->sleep(myNode->getTimeToCheck());
+				for(int i=0 ; i < 1000 ; i++){
+					this->usleep(myNode->getTimeToCheck());
+				}
 			}			
 		}
 	}

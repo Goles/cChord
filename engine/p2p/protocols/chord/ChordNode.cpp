@@ -87,7 +87,7 @@ void ChordNode::initializer(const string &ip, int port, const string &overlayInt
 	initialise(ip, id, port);
 	
 	// check if the idE[0, 2^(spacesize - 1)]
-	assert(!(id >  pow(2, spacesize - 1)));
+	assert(!(id >  pow(2, spacesize)));
 
 	//We start-up our stabilizer thread.
 	checkStable();

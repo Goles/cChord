@@ -152,8 +152,6 @@ string TransportHTTP::sendRequest(Request *request, Node *destination)
 	
 	ss << response;
 	
-	cout << ss.str() << endl;
-	
 	//delete callback;
 	free(response); // we must free the initial char* response, to avoid leaks.
 	return ss.str();

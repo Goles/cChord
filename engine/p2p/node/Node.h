@@ -12,6 +12,7 @@
 
 #include <string>
 #include <iostream>
+#include <vector>
 
 using namespace std;
 
@@ -19,12 +20,13 @@ class Node
 {
 	
 public:
-	Node(const string &inIp, unsigned int inId, int inPort);
-	Node(const string &ip, int port);
+	Node(const string &inIp, unsigned int inId, unsigned int inPort);
+	Node(const string &ip, unsigned int port);
 	Node(const string &data);
 	
 	bool	equals(Node *node);
 	string	toString();
+	vector<string> tokenize(const string& str, const string& delims);
 
 	//Getters & Setters
 	unsigned int 	getId() { return nid; }

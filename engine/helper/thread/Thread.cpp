@@ -19,8 +19,8 @@
 
 #define u_int int
 
-void micro_sleep(long millis) {
-	usleep(millis);
+void micro_sleep(long micro) {
+	usleep(micro);
 }
 
 void sec_sleep(long sec) {

@@ -63,7 +63,15 @@ void call_chord_notif(struct mg_connection *conn,
 					  const struct mg_request_info *request_info,
 					  void *user_data)
 {
-	//
+	char *n = NULL;
+	//assert(mg_get_var(conn, "overlay_id") != NULL); <== NEEDS TO BE DONE BEFORE!!! XD
+	assert((n = mg_get_var(conn, "node")) != NULL);
+
+	Node *node = new Node(n);
+	P_SINGLETON->getChordNode()->notify(node);
+
+//	//Release the allocated memory for id variable.
+	mg_free(n);
 }
 
 /*

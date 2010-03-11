@@ -149,8 +149,8 @@ install : MYMEDLIB
 
 
 # Item # 9 -- Thread --
-./Thread.o : engine/helper/thread/Thread.cc
-	$(CC) $(CCFLAGS) $(CC_OPTIONS) engine/helper/thread/Thread.cc -c $(INCLUDE) -o ./Thread.o
+./Thread.o : engine/helper/thread/Thread.cpp
+	$(CC) $(CCFLAGS) $(CC_OPTIONS) engine/helper/thread/Thread.cpp -c $(INCLUDE) -o ./Thread.o
 
 
 # Item # 10 -- Node --

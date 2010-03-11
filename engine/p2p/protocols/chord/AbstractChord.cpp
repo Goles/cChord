@@ -24,8 +24,8 @@ void AbstractChord::initialise(string ip, int id, int port)
 	predecessor = thisNode;
 	next		= 0; // C++ we have to set next to zero to avoid possible garbage...
 	alive		= true;
-	spacesize	= 10;
-	timeToCheck	= 5;
+	spacesize	= 9;
+	timeToCheck	= 50; // microSecond
 
 	for(int i = 0; i < spacesize; i++)
 	{
@@ -62,7 +62,7 @@ Node* AbstractChord::closestPrecedingNode(int nid)
 	if(thisNode == successor) {
 		return thisNode;
 	}
-	for (int i = fingerTable.size() - 1; i > 1; i--)
+	for (int i = fingerTable.size() - 1; i > 0; i--)
 	{
 		if(insideRange(fingerTable[i]->getId(), thisNode->getId() + 1, nid -1)){
 			return fingerTable[i];
@@ -78,13 +78,11 @@ void AbstractChord::join(Node* chord)
 	request->addArg("overlay_id", this->getIdentifier());
 	request->addArg("id", thisNode->getIdString());
 	
-	cout << "IDENTIFIER : " << this->getIdentifier();
-	
-	
 	//Send the request.
 	string succ = this->sendRequest(request, chord);
 	
-	cout << "SUCCESSOR : " << succ << endl;
+	// update the successor
+	successor = new Node(succ);
 }
 
 void AbstractChord::stabilize()
@@ -104,15 +102,24 @@ void AbstractChord::stabilize()
 	if(pred.compare(thisNode->toString()))
 	{
 		Node *x = new Node(pred);
-		if(insideRange(x->getId(), thisNode->getId() + 1, successor->getId() - 1))
+		if(insideRange(x->getId(), thisNode->getId() + 1, successor->getId() - 1)){
 		   successor = x;
+		}
 		
 		//Forge the message that we will sendRequest (NOTIF)
 		Request *notif_request = new Request(this->getIdentifier(), NOTIF);
-		notif_request->addArg("id", thisNode->getIdString());
+		notif_request->addArg("node", thisNode->toString());
 		sendRequest(notif_request, successor);
 	}
 }
+
+void AbstractChord::notify(Node *node) {
+	if ((predecessor == NULL)
+				|| (insideRange(node->getId(), predecessor->getId() + 1,
+						thisNode->getId() - 1)))
+			predecessor = node;
+	}
+
 
 void AbstractChord::fixFingersTable()
 {
@@ -121,7 +128,7 @@ void AbstractChord::fixFingersTable()
 	if (next > (spacesize - 1))
 		next = 1;
 
-	fingerTable[next] = findSuccessor((thisNode->getId() + (int) pow(2, next - 1)) % (int) pow(2, spacesize - 1));
+	fingerTable[next-1] = findSuccessor((thisNode->getId() + (int) pow(2, next - 1)) % (int) pow(2, spacesize - 1));
 }
 
 
@@ -145,8 +152,8 @@ void AbstractChord::printStatus()
 	cout << getIdentifier() << " on " << thisNode->getIp() << ":" << thisNode->getPort() << "\n" <<
 			"<NODE: " << thisNode->getId() << ", PRED: " << predecessor->getId() << ", SUCC: " << successor->getId() << ">\n" <<
 			"\tFingers Table: [";
-	for (int i = 0 ; i < fingerTable.size() - 2; i++) {
+	for (int i = 0 ; i < fingerTable.size() - 1; i++) {
 		cout << fingerTable[i]->getId() << ", ";
 	}
-	cout << fingerTable[fingerTable.size()-1]->getId() << "]\n\n";
+	cout << fingerTable[fingerTable.size() - 1]->getId() << "]\n\n";
 }
