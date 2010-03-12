@@ -125,7 +125,7 @@ void AbstractChord::fixFingersTable()
 {
 	next++;
 
-	if (next > (spacesize - 1))
+	if (next > spacesize)
 		next = 1;
 
 	fingerTable[next-1] = findSuccessor((thisNode->getId() + (int) pow(2, next - 1)) % (int) pow(2, spacesize - 1));
@@ -137,7 +137,7 @@ void AbstractChord::fixFingersTable()
 // /////////////////////////////////////////// //
 bool AbstractChord::insideRange(int id, int begin, int end)
 {
-	int MAXid = pow(2, spacesize - 1);
+	int MAXid = pow(2, spacesize);
 	int MINid = 0;
 
 	return	(begin < end && begin <= id && id <= end) ||
