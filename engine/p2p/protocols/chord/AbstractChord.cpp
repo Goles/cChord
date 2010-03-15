@@ -147,13 +147,17 @@ bool AbstractChord::insideRange(int id, int begin, int end)
 
 }
 
-void AbstractChord::printStatus()
+string AbstractChord::printStatus()
 {
-	cout << getIdentifier() << " on " << thisNode->getIp() << ":" << thisNode->getPort() << "\n" <<
+	stringstream ss(stringstream::in | stringstream::out);
+
+	ss << getIdentifier() << " on " << thisNode->getIp() << ":" << thisNode->getPort() << "\n" <<
 			"<NODE: " << thisNode->getId() << ", PRED: " << predecessor->getId() << ", SUCC: " << successor->getId() << ">\n" <<
 			"\tFingers Table: [";
 	for (int i = 0 ; i < fingerTable.size() - 1; i++) {
-		cout << fingerTable[i]->getId() << ", ";
+		ss << fingerTable[i]->getId() << ", ";
 	}
-	cout << fingerTable[fingerTable.size() - 1]->getId() << "]\n\n";
+	ss << fingerTable[fingerTable.size() - 1]->getId() << "]\n\n";
+
+	return ss.str();
 }

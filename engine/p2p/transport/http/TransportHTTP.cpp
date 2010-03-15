@@ -138,7 +138,7 @@ string TransportHTTP::sendRequest(Request *request, Node *destination)
 	 *	must manage it accordingly, and the callback that we choose must be passed
 	 *	via the callback argument of this function.
 	 */
-	
+
 	response = sendPost((char *)(destination->getIp()).c_str(), 
 						destination->getPort(), 
 						(char *)request->serialize().c_str(), 

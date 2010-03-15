@@ -92,7 +92,17 @@ void call_chord_put(struct mg_connection *conn,
 					const struct mg_request_info *request_info,
 					void *user_data)
 {
-	//
+	char *key = NULL;
+	char *value = NULL;
+
+	assert((key = mg_get_var(conn, "key")) != NULL);
+	assert((value = mg_get_var(conn, "value")) != NULL);
+
+	P_SINGLETON->getChordNode()->put(key, value);
+
+	//Release the allocated memory for id variable.
+	mg_free(key);
+	mg_free(value);
 }
 
 /*
@@ -102,7 +112,16 @@ void call_chord_get(struct mg_connection *conn,
 					const struct mg_request_info *request_info,
 					void *user_data)
 {
-	//
+	string result;
+	char *key = NULL;
+
+	assert((key = mg_get_var(conn, "key")) != NULL);
+
+	result =  P_SINGLETON->getChordNode()->get(key);
+	mg_printf(conn, result.c_str());
+
+	//Release the allocated memory for id variable.
+	mg_free(key);
 }
 
 /*

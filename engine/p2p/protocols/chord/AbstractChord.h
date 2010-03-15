@@ -70,7 +70,7 @@ public:
 
 	/* Helper Methods */
 	bool	insideRange(int id, int a, int b);
-	void	printStatus();
+	string	printStatus();
 
 protected:
 	typedef map<int, string> stringMap;

@@ -21,8 +21,8 @@ using namespace std;
 class IRequestHandler
 {
 public:
-	virtual string	handleRequest(const string &code) = 0;
-	virtual void	kill() = 0;
+//	virtual string	handleRequest(const string &code) = 0;
+//	virtual void	kill() = 0;
 };
 
 #endif

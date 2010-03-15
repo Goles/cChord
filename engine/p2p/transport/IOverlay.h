@@ -28,9 +28,8 @@ public:
 	virtual ITransport* getTransport()			= 0;
 	virtual Node*		getThisNode()			= 0;
 	
-	virtual void	put(string key, string value)	= 0;
-	virtual string	get(string key)					= 0;
-//	virtual void	join(string host, int port)		= 0;
+	virtual void	put(string key, string value) = 0;
+	virtual string	get(string key) = 0;
 };
 
 
