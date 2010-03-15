@@ -115,6 +115,9 @@ string ChordNode::get(string key) {
 		dataMap::iterator it = table.find(key);
 		if (it != table.end()) {
 			return (it->second);
+		} else {
+			string err = "no result";
+			return err;
 		}
 	} else {
 		// Find the node responsible for this key
