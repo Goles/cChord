@@ -44,15 +44,15 @@ Node* AbstractChord::findSuccessor(int id)
 	Node *pred = closestPrecedingNode(id);
 
 	//Forge the message that we will sendRequest (FINDSUCC)
-    std::ostringstream oss;
+	std::ostringstream oss;
 	oss << id;
-	
+
 	//Create a request.
 	Request *request = new Request(this->getIdentifier(), FINDSUCC);
 	request->addArg("id", oss.str());
-		
+
 	string succ = sendRequest(request, pred);
-	
+
 	return new Node(succ);
 }
 
@@ -77,10 +77,10 @@ void AbstractChord::join(Node* chord)
 	Request *request = new Request(this->getIdentifier(), FINDSUCC);
 	request->addArg("overlay_id", this->getIdentifier());
 	request->addArg("id", thisNode->getIdString());
-	
+
 	//Send the request.
 	string succ = this->sendRequest(request, chord);
-	
+
 	// update the successor
 	successor = new Node(succ);
 }
@@ -90,7 +90,7 @@ void AbstractChord::stabilize()
 	//Forge the message that we will sendRequest (GETPRED)
 	Request *pred_request = new Request(this->getIdentifier(), GETPRED);
 	string pred = sendRequest(pred_request, successor);
-	
+
 	if(pred.compare(string("ERROR")) == 0)
 	{
 		cout << "----------------------------------------------------------------\n";
@@ -98,27 +98,26 @@ void AbstractChord::stabilize()
 		cout << "----------------------------------------------------------------\n" << endl;
 		assert(0);
 	}
-	   
-	if(pred.compare(thisNode->toString()))
-	{
-		Node *x = new Node(pred);
-		if(insideRange(x->getId(), thisNode->getId() + 1, successor->getId() - 1)){
-		   successor = x;
-		}
-		
-		//Forge the message that we will sendRequest (NOTIF)
-		Request *notif_request = new Request(this->getIdentifier(), NOTIF);
-		notif_request->addArg("node", thisNode->toString());
-		sendRequest(notif_request, successor);
+
+	Node *x = new Node(pred);
+	if(insideRange(x->getId(), thisNode->getId() + 1, successor->getId() - 1)){
+		successor = x;
 	}
+
+	//Forge the message that we will sendRequest (NOTIF)
+	Request *notif_request = new Request(this->getIdentifier(), NOTIF);
+	notif_request->addArg("node", thisNode->toString());
+	sendRequest(notif_request, successor);
 }
 
 void AbstractChord::notify(Node *node) {
+//	cout << "AbstractChord::notify()\n";
 	if ((predecessor == NULL)
-				|| (insideRange(node->getId(), predecessor->getId() + 1,
-						thisNode->getId() - 1)))
-			predecessor = node;
-	}
+			|| (insideRange(node->getId(), predecessor->getId() + 1,
+					thisNode->getId() - 1)))
+		predecessor = node;
+
+}
 
 
 void AbstractChord::fixFingersTable()
@@ -142,8 +141,8 @@ bool AbstractChord::insideRange(int id, int begin, int end)
 
 	return	(begin < end && begin <= id && id <= end) ||
 			(begin > end && ((begin <= id && id <= MAXid) ||
-			(MINid <= id && id <= end))) ||
-			((begin == end) && (id == begin));
+					(MINid <= id && id <= end))) ||
+					((begin == end) && (id == begin));
 
 }
 

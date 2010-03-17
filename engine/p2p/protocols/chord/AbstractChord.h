@@ -38,14 +38,12 @@ public:
 	/* Chord algorithm */
 	Node*			findSuccessor(int id);
 	Node*			closestPrecedingNode(int id);
-	void			join(Node* chord);
-//	void			join(const string &host, int port);
 	void			stabilize();
 	void			notify(Node* n);
 	void			fixFingersTable();
+	void			join(Node* chord);
 
 	virtual void	checkStable() = 0;
-	void			getObjectOnJoin(Node* n);
 	
 	/*Abstract Methods*/
 	virtual string sendRequest(Request *request, Node* destination) = 0;

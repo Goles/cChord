@@ -77,6 +77,9 @@ void ChordNode::initializer(const string &ip, int port,
 	//set the overlay identifier.
 	this->overlayIntifier = overlayIntifier;
 
+	// not yet notified
+	notified = false;
+
 	//Call our parent's initializer
 	initialise(ip, id, port);
 
@@ -85,6 +88,36 @@ void ChordNode::initializer(const string &ip, int port,
 
 	//We start-up our stabilizer thread.
 	checkStable();
+}
+
+/* Override from AbstractChord */
+void ChordNode::notify(Node *n){
+	Node *pred = predecessor;
+		((AbstractChord *) this)->notify(n);
+		// If the predecessor as changed, update the DHT table
+		if(pred != predecessor){
+			notified = true;
+		}
+}
+
+void ChordNode::stabilize(){
+	((AbstractChord *) this)->stabilize();
+	// If the predecessor as changed, update the DHT table
+	if(notified){
+		Request *request = new Request(this->getIdentifier(), PUT);
+		for (dataMap::iterator it = table.begin(); it != table.end(); ++it) {
+			int id = atoi(it->first.c_str());
+			if(!insideRange(id, predecessor->getId(), thisNode->getId())){
+				request->addArg("key", it->first);
+				request->addArg("value", it->second);
+				// Send the Put request
+				sendRequest(request, predecessor);
+				// remove the key from my table
+				table.erase(it);
+			}
+		}
+		notified = false;
+	}
 }
 
 /* DHT Put */
