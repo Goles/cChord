@@ -49,7 +49,7 @@ public:
 	void			addArg(string key, string value);
 	string			getArg(string key);
 	string			serialize();
-	string			getMD5(string str);
+	unsigned int	getMD5(string str);
 
 private:
 	typedef std::pair<string, string> arg;

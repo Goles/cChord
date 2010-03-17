@@ -43,4 +43,16 @@ static inline unsigned int sha1ToInt(unsigned char *sha1)
 	return num;
 }
 
+static inline unsigned int md5toInt(unsigned char *md5)
+{
+	unsigned int num = 0;
+	
+	int i;
+	
+	for (i = 0; i < strlen((const char *)md5) + 1; i++)
+		num = num * 256 + (md5[i] & 0xff);
+	
+	return num;
+}
+
 #endif

@@ -10,6 +10,7 @@
 #include "Request.h"
 #include "ChordTransportCode.h"
 #include "tomcrypt.h"
+#include "sha1toint.h"
 
 /* Constructor */
 Request::Request(string overlayID, int code) {
@@ -33,7 +34,7 @@ string Request::getArg(string key) {
 	return "";
 }
 
-string Request::getMD5(string str){
+unsigned int Request::getMD5(string str){
 	
 	hash_state md;
 	unsigned char out [16];
@@ -47,9 +48,13 @@ string Request::getMD5(string str){
 	//Get the hash output.
 	md5_done(&md, out);
 	
-	string md5String((char *)out);
+	//string md5String((char *)out);
 	
-	return md5String;
+	cout << strlen((const char *)out) << endl;
+	
+	cout << "md52int: " << md5toInt(out) << endl;
+	
+	return md5toInt(out);
 }
 
 /* Serialize the whole request into a callback string. "/callback?var1=a&var2=b....&var1000=bar" */
@@ -107,6 +112,8 @@ string Request::serialize() {
 		}
 	}
 
+	ss << "&checksum=" << getMD5(ss.str());
+	
 	return ss.str();
 }
 
