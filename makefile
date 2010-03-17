@@ -59,6 +59,7 @@ MYMEDLIB : \
 		./HTTP_Client.o\
 		./crypt_argchk.o\
 		./sha1.o\
+		./md5.o\
 		./callbacks.o\
 		./tracker_callbacks.o\
 		./chord_callbacks.o\
@@ -84,6 +85,7 @@ clean :
 		./HTTP_Client.o\
 		./crypt_argchk.o\
 		./sha1.o\
+		./md5.o\
 		./callbacks.o\
 		./tracker_callbacks.o\
 		./chord_callbacks.o\
@@ -127,62 +129,65 @@ install : MYMEDLIB
 ./sha1.o : engine/helper/crypto/tomcrypt/algorithms/sha1.c
 	$(CC) $(CCFLAGS) $(CC_OPTIONS) engine/helper/crypto/tomcrypt/algorithms/sha1.c -c $(INCLUDE) -o ./sha1.o
 
-
-# Item # 5 -- callbacks --
+# Item # 5 -- md5 --
+./md5.o : engine/helper/crypto/tomcrypt/algorithms/md5.c
+	$(CC) $(CCFLAGS) $(CC_OPTIONS) engine/helper/crypto/tomcrypt/algorithms/md5.c -c $(INCLUDE) -o ./md5.o
+	
+# Item # 6 -- callbacks --
 ./callbacks.o : engine/helper/mongoose_http_server/callbacks/callbacks.cpp
 	$(CC) $(CCFLAGS) $(CC_OPTIONS) engine/helper/mongoose_http_server/callbacks/callbacks.cpp -c $(INCLUDE) -o ./callbacks.o
 
 
-# Item # 6 -- tracker_callbacks --
+# Item # 7 -- tracker_callbacks --
 ./tracker_callbacks.o : engine/helper/mongoose_http_server/callbacks/tracker_callbacks.cpp
 	$(CC) $(CCFLAGS) $(CC_OPTIONS) engine/helper/mongoose_http_server/callbacks/tracker_callbacks.cpp -c $(INCLUDE) -o ./tracker_callbacks.o
 
 
-# Item # 7 -- chord_callbacks --
+# Item # 8 -- chord_callbacks --
 ./chord_callbacks.o : engine/helper/mongoose_http_server/callbacks/chord_callbacks.cpp
 	$(CC) $(CCFLAGS) $(CC_OPTIONS) engine/helper/mongoose_http_server/callbacks/chord_callbacks.cpp -c $(INCLUDE) -o ./chord_callbacks.o
 
 
-# Item # 8 -- mongoose --
+# Item # 9 -- mongoose --
 ./mongoose.o : engine/helper/mongoose_http_server/mongoose.cpp
 	$(CC) $(CCFLAGS) $(CC_OPTIONS) engine/helper/mongoose_http_server/mongoose.cpp -c $(INCLUDE) -o ./mongoose.o
 
 
-# Item # 9 -- Thread --
+# Item # 10 -- Thread --
 ./Thread.o : engine/helper/thread/Thread.cpp
 	$(CC) $(CCFLAGS) $(CC_OPTIONS) engine/helper/thread/Thread.cpp -c $(INCLUDE) -o ./Thread.o
 
 
-# Item # 10 -- Node --
+# Item # 11 -- Node --
 ./Node.o : engine/p2p/node/Node.cpp
 	$(CC) $(CCFLAGS) $(CC_OPTIONS) engine/p2p/node/Node.cpp -c $(INCLUDE) -o ./Node.o
 
 
-# Item # 11 -- AbstractChord --
+# Item # 12 -- AbstractChord --
 ./AbstractChord.o : engine/p2p/protocols/chord/AbstractChord.cpp
 	$(CC) $(CCFLAGS) $(CC_OPTIONS) engine/p2p/protocols/chord/AbstractChord.cpp -c $(INCLUDE) -o ./AbstractChord.o
 
 
-# Item # 12 -- ChordNode --
+# Item # 13 -- ChordNode --
 ./ChordNode.o : engine/p2p/protocols/chord/ChordNode.cpp
 	$(CC) $(CCFLAGS) $(CC_OPTIONS) engine/p2p/protocols/chord/ChordNode.cpp -c $(INCLUDE) -o ./ChordNode.o
 
 
-# Item # 13 -- ProtocolSingleton --
+# Item # 14 -- ProtocolSingleton --
 ./ProtocolSingleton.o : engine/p2p/protocols/ProtocolSingleton.cpp
 	$(CC) $(CCFLAGS) $(CC_OPTIONS) engine/p2p/protocols/ProtocolSingleton.cpp -c $(INCLUDE) -o ./ProtocolSingleton.o
 
 
-# Item # 14 -- http_operations --
+# Item # 15 -- http_operations --
 ./http_operations.o : engine/p2p/transport/http/http_operations.cpp
 	$(CC) $(CCFLAGS) $(CC_OPTIONS) engine/p2p/transport/http/http_operations.cpp -c $(INCLUDE) -o ./http_operations.o
 
 
-# Item # 15 -- TransportHTTP --
+# Item # 16 -- TransportHTTP --
 ./TransportHTTP.o : engine/p2p/transport/http/TransportHTTP.cpp
 	$(CC) $(CCFLAGS) $(CC_OPTIONS) engine/p2p/transport/http/TransportHTTP.cpp -c $(INCLUDE) -o ./TransportHTTP.o
 	
-# Item # 16 -- TransportHTTP --
+# Item # 17 -- TransportHTTP --
 ./Request.o : engine/helper/request/Request.cpp
 	$(CC) $(CCFLAGS) $(CC_OPTIONS) engine/helper/request/Request.cpp -c $(INCLUDE) -o ./Request.o
 

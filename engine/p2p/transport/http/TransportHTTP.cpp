@@ -182,6 +182,8 @@ string TransportHTTP::sendTrackerRequest(const string &host, int port, const str
 	
 	char *trackerResponse = http_get(cHost, port, cCallback);
 	
+	//should delete cHost and cCallback
+	
 	return trackerResponse;
 }
 
