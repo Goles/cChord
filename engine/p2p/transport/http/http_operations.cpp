@@ -10,6 +10,7 @@
 #include "http_operations.h"
 #include <iostream>
 #include <fstream>
+#include <cstdio>
 
 char* process_http(int sockfd, char *host, char *page, char *poststr)
 {
@@ -32,10 +33,12 @@ char* process_http(int sockfd, char *host, char *page, char *poststr)
 	{
 		printf("Failed to write to socket! \n");
 		printf("Check if socket is writeable.\n");
-		return NULL; 
+		printf("Errno %d: %s\n",errno, strerror( errno ));
+	
+		return NULL;
 	}
 	
-	while ( ( n = read(sockfd, recvline,  MAXLINE)) != 0 )
+	while (( n = read(sockfd, recvline,  MAXLINE)) != 0)
 	{
 		recvline[n]='\0'; 	
 	}

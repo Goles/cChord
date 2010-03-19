@@ -9,6 +9,8 @@
 
 #include "Request.h"
 #include "ChordTransportCode.h"
+#include "tomcrypt.h"
+#include "sha1toint.h"
 
 /* Constructor */
 Request::Request(string overlayID, int code) {
@@ -30,6 +32,29 @@ string Request::getArg(string key) {
 	}
 
 	return "";
+}
+
+unsigned int Request::getMD5(string str){
+	
+	hash_state md;
+	unsigned char out [16];
+	
+	//Initialize the MD5 hash function according to Tomcrypt library.
+	md5_init(&md);
+	
+	//Apply SHA-1 to the input string.
+	md5_process(&md, (unsigned char *)str.c_str(), str.length());
+	
+	//Get the hash output.
+	md5_done(&md, out);
+	
+	//string md5String((char *)out);
+	
+	cout << strlen((const char *)out) << endl;
+	
+	cout << "md52int: " << md5toInt(out) << endl;
+	
+	return md5toInt(out);
 }
 
 /* Serialize the whole request into a callback string. "/callback?var1=a&var2=b....&var1000=bar" */
@@ -86,6 +111,9 @@ string Request::serialize() {
 			}
 		}
 	}
+
+	ss << "&checksum=" << getMD5(ss.str());
+	
 	return ss.str();
 }
 
