@@ -2,8 +2,8 @@
  *  http_operations.h
  *  iPhone_p2p_engine
  *
- *  Created by Nicolas Goles on 1/14/10.
- *  Copyright 2010 INRIA - Lognet Team. All rights reserved.
+ *  Created by LogNet team 2010 - INRIA
+ *  Mediteranee - Sophia Antipolis - France
  *
  */
 
@@ -62,5 +62,4 @@ char* getLocalIp();
 int getPostMessage(char *message);
 
 #endif
-
 

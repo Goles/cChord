@@ -38,26 +38,34 @@ public:
 	Request(string overlayID, int code);
 
 	/* GETTER */
-	int				getCode() const { return code; }
-	string			getOverlayID() const { return overlayID; }
+	int getCode() const {
+		return code;
+	}
+	string getOverlayID() const {
+		return overlayID;
+	}
 
 	/* SETTER */
-	void setCode(int code) { this->code = code; }
-	void setOverlayID(string overlayID) { this->overlayID = overlayID; }
-	
+	void setCode(int code) {
+		this->code = code;
+	}
+	void setOverlayID(string overlayID) {
+		this->overlayID = overlayID;
+	}
+
 	/*Methods*/
-	void			addArg(string key, string value);
-	string			getArg(string key);
-	string			serialize();
-	unsigned int	getMD5(string str);
+	void addArg(string key, string value);
+	string getArg(string key);
+	string serialize();
+	unsigned int getMD5(string str);
 
 private:
 	typedef std::pair<string, string> arg;
-	typedef	std::map<string, string> argMap;
-	
-	string 	overlayID; // Overlay Identifier
-	int		code; // see ChordTransportCode.h
-	
+	typedef std::map<string, string> argMap;
+
+	string overlayID; // Overlay Identifier
+	int code; // see ChordTransportCode.h
+
 	argMap arguments;
 };
 

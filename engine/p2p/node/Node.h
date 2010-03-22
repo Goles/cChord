@@ -2,8 +2,8 @@
  *  Node.h
  *  iPhone_p2p_engine
  *
- *  Created by Nicolas Goles on 1/14/10.
- *  Copyright 2010 INRIA Lognet. All rights reserved.
+ *  Created by LogNet team 2010 - INRIA
+ *  Mediteranee - Sophia Antipolis - France
  *
  */
 
@@ -18,12 +18,12 @@ using namespace std;
 
 class Node
 {
-	
+
 public:
 	Node(const string &inIp, unsigned int inId, unsigned int inPort);
 	Node(const string &ip, unsigned int port);
 	Node(const string &data);
-	
+
 	bool	equals(Node *node);
 	string	toString();
 	vector<string> tokenize(const string& str, const string& delims);
@@ -45,7 +45,7 @@ private:
 	unsigned int	nid; //node id (nid), "id" is reserved keyword in Cocoa.
 	string			nidS;
 	int				port;
-	
+
 };
 
 #endif

@@ -2,8 +2,8 @@
  *  callbacks.h
  *  iPhone_POC_P2P
  *
- *  Created by Nicolas Goles on 1/13/10.
- *  Copyright 2010 INRIA Lognet. All rights reserved.
+ *  Created by LogNet team 2010 - INRIA
+ *  Mediteranee - Sophia Antipolis - France
  *
  */
 
@@ -28,8 +28,7 @@ void assignNodeReference(AbstractChord *a);
  *  peers communicate. (at least for now)
  */
 void call_tracker_handler(struct mg_connection *conn,
-						  const struct mg_request_info *request_info,
-						  void *user_data);
+		const struct mg_request_info *request_info, void *user_data);
 
 /*
  *	This should be the main webserver callback, and should be able to 
@@ -39,8 +38,7 @@ void call_tracker_handler(struct mg_connection *conn,
  *  
  */
 void call_request_handler(struct mg_connection *conn,
-								 const struct mg_request_info *request_info,
-								 void *user_data);
+		const struct mg_request_info *request_info, void *user_data);
 
 /*
  *	This functions are mostly for experimental purposes. It should support to send POST 
@@ -48,19 +46,16 @@ void call_request_handler(struct mg_connection *conn,
  *  to "echo".
  */
 void call_ping(struct mg_connection *conn,
-					  const struct mg_request_info *request_info,
-					  void *user_data);
+		const struct mg_request_info *request_info, void *user_data);
 
 void call_pong(struct mg_connection *conn,
-					  const struct mg_request_info *request_info,
-					  void *user_data);
+		const struct mg_request_info *request_info, void *user_data);
 
 /*
  * One of the first test cases, just a simple callback to display the requester's IP
  * on a webpage.
  */
 void show_secret(struct mg_connection *conn,
-						const struct mg_request_info *request_info,
-						void *user_data);
+		const struct mg_request_info *request_info, void *user_data);
 
 #endif

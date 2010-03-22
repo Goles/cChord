@@ -2,13 +2,13 @@
  *  ChordNode.cpp
  *  iPhone_p2p_engine
  *
- *  Created by Nicolas Goles on 1/18/10.
- *  Copyright 2010 INRIA Lognet. All rights reserved.
+ *  Created by LogNet team 2010 - INRIA
+ *  Mediteranee - Sophia Antipolis - France
  *
  */
 
 #include "ChordNode.h"
-#include "MyThread.h"
+#include "Stabilization.h"
 #include "tomcrypt.h"
 #include "sha1toint.h"
 #include "TransportHTTP.h"
@@ -69,7 +69,7 @@ void ChordNode::initializer(const string &ip, int port,
 void ChordNode::initializer(const string &ip, int port,
 		const string &overlayIntifier, unsigned int id) {
 	//create our stabilizer thread instance.
-	stableThread = new MyThread(0, this);
+	stableThread = new Stabilization(0, this);
 
 	//Initialize the transport layer.
 	transport = new TransportHTTP(port);
@@ -91,23 +91,23 @@ void ChordNode::initializer(const string &ip, int port,
 }
 
 /* Override from AbstractChord */
-void ChordNode::notify(Node *n){
+void ChordNode::notify(Node *n) {
 	Node *pred = predecessor;
-		((AbstractChord *) this)->notify(n);
-		// If the predecessor as changed, update the DHT table
-		if(pred != predecessor){
-			notified = true;
-		}
+	((AbstractChord *) this)->notify(n);
+	// If the predecessor as changed, update the DHT table
+	if (pred != predecessor) {
+		notified = true;
+	}
 }
 
-void ChordNode::stabilize(){
+void ChordNode::stabilize() {
 	((AbstractChord *) this)->stabilize();
 	// If the predecessor as changed, update the DHT table
-	if(notified){
-		Request *request = new Request(this->getIdentifier(), PUT);
+	if (notified) {
 		for (dataMap::iterator it = table.begin(); it != table.end(); ++it) {
+			Request *request = new Request(this->getIdentifier(), PUT);
 			int id = atoi(it->first.c_str());
-			if(!insideRange(id, predecessor->getId(), thisNode->getId())){
+			if (!insideRange(id, predecessor->getId(), thisNode->getId())) {
 				request->addArg("key", it->first);
 				request->addArg("value", it->second);
 				// Send the Put request
@@ -124,7 +124,7 @@ void ChordNode::stabilize(){
 void ChordNode::put(string key, string value) {
 	// Convert the key in a hash integer
 	int hKey = keyToH(key);
-	if (insideRange(hKey, predecessor->getId(), thisNode->getId())) {
+	if (insideRange(hKey, predecessor->getId() + 1, thisNode->getId())) {
 		// I'm responsible for this key
 		table.insert(data(key, value));
 	} else {
@@ -143,7 +143,7 @@ void ChordNode::put(string key, string value) {
 string ChordNode::get(string key) {
 	// Convert the key in a hash integer
 	int hKey = keyToH(key);
-	if (insideRange(hKey, predecessor->getId(), thisNode->getId())) {
+	if (insideRange(hKey, predecessor->getId() + 1, thisNode->getId())) {
 		// I'm responsible for this key
 		dataMap::iterator it = table.find(key);
 		if (it != table.end()) {
@@ -171,12 +171,60 @@ int ChordNode::keyToH(string key) {
 
 /* Forward a message to a peer, the message is in the format: "<IP+PORT>,TRANSPORT_CODE" */
 string ChordNode::sendRequest(Request *request, Node* destination) {
-	return transport->sendRequest(request, destination);
+	// CheckPredecessor use GETPRED request to check
+	// if the predecessor is still alive
+	if (request->getCode() == CHECKPRED) {
+		request->setCode(GETPRED);
+		if (!transport->sendRequest(request, destination)) {
+			predecessor = thisNode;
+		}
+		return "";
+	} else {
+		char *response = transport->sendRequest(request, destination);
+		if (response) {
+			stringstream ss;
+			ss << response;
+			free(response); // we must free the initial char* response, to avoid leaks.
+			return ss.str();
+		} else {
+			// re-build the broken FingerTable and try to send again the request
+			fixBrokenFingersTable(destination);
+			// time to fix the chord
+			sleep(1);
+			// try again the request with a new destination
+			return sendRequest(request, findSuccessor(destination->getId()));
+		}
+	}
 }
 
 /* Starts up the "stabilizer thread" for this peer. */
 void ChordNode::checkStable() {
 	stableThread->start();
+}
+
+/* Stop the stabilization, distribute the key and shutDown the peer */
+void ChordNode::shutDown() {
+	stableThread->kill();
+	// notify predecessor
+	Request *request = new Request(this->getIdentifier(), SETSUCC);
+	request->addArg("successor", successor->toString());
+	sendRequest(request, predecessor);
+	// notify successor
+	request = new Request(this->getIdentifier(), SETPRED);
+	request->addArg("predecessor", predecessor->toString());
+	sendRequest(request, successor);
+	// give the part of the DHT to the successor
+	for (dataMap::iterator it = table.begin(); it != table.end(); ++it) {
+		request = new Request(this->getIdentifier(), PUT);
+		request->addArg("key", it->first);
+		request->addArg("value", it->second);
+		sendRequest(request, successor);
+		// remove the key from my table
+		table.erase(it);
+	}
+	cout << "bye bye...\n";
+	sleep(1);
+	exit(0);
 }
 
 /* print node status */

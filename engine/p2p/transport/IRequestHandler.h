@@ -2,8 +2,8 @@
  *  IRequestHandler.h
  *  iPhone_p2p_engine
  *
- *  Created by Nicolas Goles on 1/26/10.
- *  Copyright 2010 INRIA Lognet. All rights reserved.
+ *  Created by LogNet team 2010 - INRIA
+ *  Mediteranee - Sophia Antipolis - France
  *
  */
 
@@ -18,11 +18,10 @@
 
 using namespace std;
 
-class IRequestHandler
-{
+class IRequestHandler {
 public:
-//	virtual string	handleRequest(const string &code) = 0;
-//	virtual void	kill() = 0;
+	//	virtual string	handleRequest(const string &code) = 0;
+	//	virtual void	kill() = 0;
 };
 
 #endif

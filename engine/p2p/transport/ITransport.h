@@ -2,8 +2,8 @@
  *  ITransport.h
  *  iPhone_p2p_engine
  *
- *  Created by Nicolas Goles on 1/26/10.
- *  Copyright 2010 INRIA Lognet. All rights reserved.
+ *  Created by LogNet team 2010 - INRIA
+ *  Mediteranee - Sophia Antipolis - France
  *
  */
 
@@ -21,11 +21,11 @@
 class ITransport
 {
 public:
-	virtual string	sendRequest(Request *request, Node *destination) = 0;
+	virtual char*	sendRequest(Request *request, Node *destination) = 0;
 	virtual	string	connectToTracker(const string &ip, int port, Node *n) = 0;
 	int				getPort() { return port; }
 	void			setPort( int p ) { port = p; }
-		
+
 protected:
 	int port;
 };

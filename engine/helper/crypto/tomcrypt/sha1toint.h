@@ -2,8 +2,8 @@
  *  sha1toint.h
  *  iPhone_p2p_engine
  *
- *  Created by Nicolas Goles on 1/20/10.
- *  Copyright 2010 INRIA Lognet. All rights reserved.
+ *  Created by LogNet team 2010 - INRIA
+ *  Mediteranee - Sophia Antipolis - France
  *
  */
 
@@ -31,27 +31,25 @@
  * NG 20 - Jan - 2010
  */
 
-static inline unsigned int sha1ToInt(unsigned char *sha1)
-{
+static inline unsigned int sha1ToInt(unsigned char *sha1) {
 	unsigned int num = 0;
-	
+
 	int i;
-	
+
 	for (i = 0; i < MAX_BYTE_NUM; i++)
 		num = num * 256 + (sha1[i] & 0xff);
-	
+
 	return num;
 }
 
-static inline unsigned int md5toInt(unsigned char *md5)
-{
+static inline unsigned int md5toInt(unsigned char *md5) {
 	unsigned int num = 0;
-	
+
 	int i;
-	
-	for (i = 0; i < strlen((const char *)md5) + 1; i++)
+
+	for (i = 0; i < strlen((const char *) md5) + 1; i++)
 		num = num * 256 + (md5[i] & 0xff);
-	
+
 	return num;
 }
 

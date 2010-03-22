@@ -2,13 +2,12 @@
  *  TransportHTTP.cpp
  *  iPhone_p2p_engine
  *
- *  Created by Nicolas Goles on 1/26/10.
- *  Copyright 2010 INRIA Lognet. All rights reserved.
+ *  Created by LogNet team 2010 - INRIA
+ *  Mediteranee - Sophia Antipolis - France
  *
  */
 
 #include "http_operations.h" //I include .c file for the linker to notice the .o
-
 #include "TransportHTTP.h"
 #include "HTTP_Client.h"
 #include "ChordNode.h"
@@ -23,18 +22,16 @@
 /*
  * Constructor & Destructor.
  */
-TransportHTTP::TransportHTTP(int port)
-{
+TransportHTTP::TransportHTTP(int port) {
 	//Constructor.
 	this->setPort(port);
 	myPort = port;
-	
+
 	//Initialize the webserver
 	this->startHTTP();
 }
 
-TransportHTTP::~TransportHTTP()
-{
+TransportHTTP::~TransportHTTP() {
 	this->stopHTTP();
 }
 
@@ -43,49 +40,49 @@ TransportHTTP::~TransportHTTP()
  */
 
 //Starts up the mongoose HTTP server.
-void TransportHTTP::startHTTP()
-{
-	char buffer[255]; 
+void TransportHTTP::startHTTP() {
+	char buffer[255];
 	sprintf(buffer, "%d", myPort);
-	
+
 	string a(buffer);
-	
-	this->ctx = mg_start();     // Start Mongoose serving context thread
-	mg_set_option(ctx, "root", ".");  // Set document root
-	mg_set_option(ctx, "ports", a.c_str());    // Listen on port XXXX
+
+	this->ctx = mg_start(); // Start Mongoose serving context thread
+	mg_set_option(ctx, "root", "."); // Set document root
+	mg_set_option(ctx, "ports", a.c_str()); // Listen on port XXXX
 	this->initCallbacks();
-	
+
 	/* Now Mongoose is up, running and configured.
-	   Serve until somebody terminates us */
-	
+	 Serve until somebody terminates us */
+
 	cout << "----------------------------------------------------" << endl;
-	cout << "Mongoose Server is running on http://localhost:" << this->getPort() << endl;
+	cout << "Mongoose Server is running on http://localhost:"
+			<< this->getPort() << endl;
 	cout << "----------------------------------------------------" << endl;
 }
 
 //Stops the mongoose HTTP server.
-void TransportHTTP::stopHTTP()
-{
+void TransportHTTP::stopHTTP() {
 	mg_stop(ctx);
 	cout << "Mongoose Server is now stopped" << endl;
 }
 
 //Init the mongoose HTTP server callbacks.
-void TransportHTTP::initCallbacks()
-{
-	if(ctx != NULL)
-	{
+void TransportHTTP::initCallbacks() {
+	if (ctx != NULL) {
 		/*Test callbacks*/
 		mg_set_uri_callback(ctx, "/requesthandler", &call_request_handler, NULL);
 		mg_set_uri_callback(ctx, "/ping", &call_ping, NULL);
 		mg_set_uri_callback(ctx, "/pong", &call_pong, NULL);
-		
+
 		/*Set tracker transport code Callbacks*/
-		mg_set_uri_callback(ctx, "/tracker/addnode", &call_tracker_addnode, NULL);
-		mg_set_uri_callback(ctx, "/tracker/getconnection", &call_tracker_getconnection, NULL);
-		mg_set_uri_callback(ctx, "/tracker/removenode", &call_tracker_removenode, NULL);	
-		mg_set_uri_callback(ctx, "/tracker/join", &call_tracker_join, NULL);	
-		
+		mg_set_uri_callback(ctx, "/tracker/addnode", &call_tracker_addnode,
+				NULL);
+		mg_set_uri_callback(ctx, "/tracker/getconnection",
+				&call_tracker_getconnection, NULL);
+		mg_set_uri_callback(ctx, "/tracker/removenode",
+				&call_tracker_removenode, NULL);
+		mg_set_uri_callback(ctx, "/tracker/join", &call_tracker_join, NULL);
+
 		/*Set Chord transport code Callbacks*/
 		mg_set_uri_callback(ctx, "/getpred", &call_chord_getpred, NULL);
 		mg_set_uri_callback(ctx, "/findsucc", &call_chord_findsucc, NULL);
@@ -98,65 +95,45 @@ void TransportHTTP::initCallbacks()
 	}
 }
 
-
 /*
  * Method that encapsulates a simple tracker connection using HTTP.
  */
-string TransportHTTP::connectToTracker(const string &ip, int port, Node *n)
-{
-//	IOverlay	*overlay	= new ChordNode(n->getIp(),n->getPort());
-//	Node		*tracker	= new Node(ip,port);
-//	stringstream addnode	(stringstream::in | stringstream::out);
-//	stringstream conn		(stringstream::in | stringstream::out);
-//	
-//	string *callback = new string("/tracker/httpHandler.jsp?request=2,student"); //this is freed in sendRequest
-//	
-//	//string trackerResponse = overlay->getTransport()->sendRequest(conn.str(), tracker);
-//	
-//	string trackerResponse = this->sendRequest(callback, "", tracker);
-//	
-//	cout << "TRACKER RESPONSE!! : " << trackerResponse << endl;
-//	
-//
-//	delete callback;
-	
+string TransportHTTP::connectToTracker(const string &ip, int port, Node *n) {
+	//	IOverlay	*overlay	= new ChordNode(n->getIp(),n->getPort());
+	//	Node		*tracker	= new Node(ip,port);
+	//	stringstream addnode	(stringstream::in | stringstream::out);
+	//	stringstream conn		(stringstream::in | stringstream::out);
+	//
+	//	string *callback = new string("/tracker/httpHandler.jsp?request=2,student"); //this is freed in sendRequest
+	//
+	//	//string trackerResponse = overlay->getTransport()->sendRequest(conn.str(), tracker);
+	//
+	//	string trackerResponse = this->sendRequest(callback, "", tracker);
+	//
+	//	cout << "TRACKER RESPONSE!! : " << trackerResponse << endl;
+	//
+	//
+	//	delete callback;
+
 
 	this->sendTrackerRequest("209.85.227.104", 80, "/");
-	
+
 	//http_get("209.85.227.99", 80, "/");
 }
 
 /*
  * Abstract member function Implementation.
  */
-string TransportHTTP::sendRequest(Request *request, Node *destination)
-{	
-	char *response = NULL;
-	
+char* TransportHTTP::sendRequest(Request *request, Node *destination) {
 	/*
 	 *	We should send our POST to the destination, their callback function,
 	 *	must manage it accordingly, and the callback that we choose must be passed
 	 *	via the callback argument of this function.
 	 */
-
-	response = sendPost((char *)(destination->getIp()).c_str(), 
-						destination->getPort(), 
-						(char *)request->serialize().c_str(), 
-						(char *)""); //for now the POST content is empty.
-	
-	//if we have null response from sendPost()
-	if(strcmp(response, "ERROR") == 0)
-		return "ERROR";
-	
-	stringstream ss;
-	
-	ss << response;
-	
-	//delete callback;
-	free(response); // we must free the initial char* response, to avoid leaks.
-	return ss.str();
+	return sendPost((char *) (destination->getIp()).c_str(),
+			destination->getPort(), (char *) request->serialize().c_str(),
+			(char *) ""); //for now the POST content is empty.
 }
-
 
 /*
  *	Since the tracker can only present HTML responses (for now) and not tweak
@@ -164,39 +141,37 @@ string TransportHTTP::sendRequest(Request *request, Node *destination)
  *  use the following function to send the request in GET format and to receive
  *  only the HTML we want ( and not the headers, etc ).
  */
-string TransportHTTP::sendTrackerRequest(const string &host, int port, const string &callback)
-{
-	//We can't directly pass const values to http_get()	
+string TransportHTTP::sendTrackerRequest(const string &host, int port,
+		const string &callback) {
+	//We can't directly pass const values to http_get()
 	char *cHost = NULL;
 	char *cCallback = NULL;
-	
+
 	//put the strings in their corresponding places.
-	cHost = new char [host.size() + 1];
-	cCallback = new char [callback.size() + 1];
-	
+	cHost = new char[host.size() + 1];
+	cCallback = new char[callback.size() + 1];
+
 	strcpy(cHost, host.c_str());
 	strcpy(cCallback, callback.c_str());
-	
-	printf("%s\n",cHost);
-	printf("%s\n",cCallback);
-	
+
+	printf("%s\n", cHost);
+	printf("%s\n", cCallback);
+
 	char *trackerResponse = http_get(cHost, port, cCallback);
-	
+
 	//should delete cHost and cCallback
-	
+
 	return trackerResponse;
 }
 
 /*
  * Member functions implementation
  */
-string TransportHTTP::doStuff(const string &code)
-{
+string TransportHTTP::doStuff(const string &code) {
 	return "";
 }
 
-void TransportHTTP::test()
-{
-	
+void TransportHTTP::test() {
+
 }
 
