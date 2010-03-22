@@ -44,6 +44,7 @@ public:
 	/* Action Methods */
 	virtual string	sendRequest(Request *request, Node* destination);
 	virtual void	checkStable();
+	virtual void 	shutDown();
 
 	/* Override Methods */
 	void notify(Node *n);

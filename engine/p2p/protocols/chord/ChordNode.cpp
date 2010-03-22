@@ -124,7 +124,7 @@ void ChordNode::stabilize(){
 void ChordNode::put(string key, string value) {
 	// Convert the key in a hash integer
 	int hKey = keyToH(key);
-	if (insideRange(hKey, predecessor->getId(), thisNode->getId())) {
+	if (insideRange(hKey, predecessor->getId()+1, thisNode->getId())) {
 		// I'm responsible for this key
 		table.insert(data(key, value));
 	} else {
@@ -143,7 +143,7 @@ void ChordNode::put(string key, string value) {
 string ChordNode::get(string key) {
 	// Convert the key in a hash integer
 	int hKey = keyToH(key);
-	if (insideRange(hKey, predecessor->getId(), thisNode->getId())) {
+	if (insideRange(hKey, predecessor->getId()+1, thisNode->getId())) {
 		// I'm responsible for this key
 		dataMap::iterator it = table.find(key);
 		if (it != table.end()) {
@@ -177,6 +177,11 @@ string ChordNode::sendRequest(Request *request, Node* destination) {
 /* Starts up the "stabilizer thread" for this peer. */
 void ChordNode::checkStable() {
 	stableThread->start();
+}
+
+/* Stop the stabilization, distribute the key and shutDown the peer */
+void ChordNode::shutDown(){
+
 }
 
 /* print node status */

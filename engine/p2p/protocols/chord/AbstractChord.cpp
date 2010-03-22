@@ -100,7 +100,7 @@ void AbstractChord::stabilize()
 	}
 
 	Node *x = new Node(pred);
-	if(insideRange(x->getId(), thisNode->getId() + 1, successor->getId() - 1)){
+	if(x->getId() != thisNode->getId() && insideRange(x->getId(), thisNode->getId() + 1, successor->getId() - 1)){
 		successor = x;
 	}
 
@@ -124,9 +124,9 @@ void AbstractChord::fixFingersTable()
 {
 	next++;
 
-	if (next > spacesize)
+	if (next > spacesize) {
 		next = 1;
-
+	}
 	fingerTable[next-1] = findSuccessor((thisNode->getId() + (int) pow(2, next - 1)) % (int) pow(2, spacesize - 1));
 }
 
