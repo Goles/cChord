@@ -9,6 +9,7 @@
 
 #include "AbstractChord.h"
 #include "ProtocolSingleton.h"
+#include <stdlib.h>
 #include <math.h>
 #include <iostream>
 #include <sstream>
@@ -17,18 +18,16 @@
 // /////////////////////////////////////////// //
 //                  INITIALISE                 //
 // /////////////////////////////////////////// //
-void AbstractChord::initialise(string ip, int id, int port)
-{
-	thisNode	= new Node(ip, id, port);
-	successor	= thisNode;
+void AbstractChord::initialise(string ip, int id, int port) {
+	thisNode = new Node(ip, id, port);
+	successor = thisNode;
 	predecessor = thisNode;
-	next		= 0; // C++ we have to set next to zero to avoid possible garbage...
-	alive		= true;
-	spacesize	= 9;
-	timeToCheck	= 250; // miliSecond
+	next = 0; // C++ we have to set next to zero to avoid possible garbage...
+	alive = true;
+	spacesize = 9;
+	timeToCheck = 250; // miliSecond
 
-	for(int i = 0; i < spacesize; i++)
-	{
+	for (int i = 0; i < spacesize; i++) {
 		fingerTable.push_back(thisNode);
 	}
 }
@@ -36,9 +35,8 @@ void AbstractChord::initialise(string ip, int id, int port)
 // /////////////////////////////////////////// //
 //               CHORD ALGORITHM               //
 // /////////////////////////////////////////// //
-Node* AbstractChord::findSuccessor(int id)
-{
-	if(insideRange(id, thisNode->getId() + 1, successor->getId()))
+Node* AbstractChord::findSuccessor(int id) {
+	if (insideRange(id, thisNode->getId() + 1, successor->getId()))
 		return successor;
 
 	Node *pred = closestPrecedingNode(id);
@@ -56,23 +54,20 @@ Node* AbstractChord::findSuccessor(int id)
 	return new Node(succ);
 }
 
-Node* AbstractChord::closestPrecedingNode(int nid)
-{
+Node* AbstractChord::closestPrecedingNode(int nid) {
 	// optimization
-	if(thisNode == successor) {
+	if (thisNode == successor) {
 		return thisNode;
 	}
-	for (int i = fingerTable.size() - 1; i > 0; i--)
-	{
-		if(insideRange(fingerTable[i]->getId(), thisNode->getId() + 1, nid -1)){
+	for (int i = fingerTable.size() - 1; i > 0; i--) {
+		if (insideRange(fingerTable[i]->getId(), thisNode->getId() + 1, nid - 1)) {
 			return fingerTable[i];
 		}
 	}
 	return successor;
 }
 
-void AbstractChord::join(Node* chord)
-{		
+void AbstractChord::join(Node* chord) {
 	//Forge the actual request.
 	Request *request = new Request(this->getIdentifier(), FINDSUCC);
 	request->addArg("overlay_id", this->getIdentifier());
@@ -85,22 +80,14 @@ void AbstractChord::join(Node* chord)
 	successor = new Node(succ);
 }
 
-void AbstractChord::stabilize()
-{
+void AbstractChord::stabilize() {
 	//Forge the message that we will sendRequest (GETPRED)
 	Request *pred_request = new Request(this->getIdentifier(), GETPRED);
 	string pred = sendRequest(pred_request, successor);
 
-	if(pred.compare(string("ERROR")) == 0)
-	{
-		cout << "----------------------------------------------------------------\n";
-		cout << "Peer successor unreachable, this should be handled in the future." << endl;
-		cout << "----------------------------------------------------------------\n" << endl;
-		assert(0);
-	}
-
 	Node *x = new Node(pred);
-	if(x->getId() != thisNode->getId() && insideRange(x->getId(), thisNode->getId() + 1, successor->getId() - 1)){
+	if (x->getId() != thisNode->getId() && insideRange(x->getId(),
+			thisNode->getId() + 1, successor->getId() - 1)) {
 		successor = x;
 	}
 
@@ -111,49 +98,65 @@ void AbstractChord::stabilize()
 }
 
 void AbstractChord::notify(Node *node) {
-//	cout << "AbstractChord::notify()\n";
-	if ((predecessor == NULL)
-			|| (insideRange(node->getId(), predecessor->getId() + 1,
-					thisNode->getId() - 1)))
+	//	cout << "AbstractChord::notify()\n";
+	if ((predecessor == NULL) || (insideRange(node->getId(),
+			predecessor->getId() + 1, thisNode->getId() - 1)))
 		predecessor = node;
 
 }
 
-
-void AbstractChord::fixFingersTable()
-{
+void AbstractChord::fixFingersTable() {
 	next++;
-
 	if (next > spacesize) {
 		next = 1;
 	}
-	fingerTable[next-1] = findSuccessor((thisNode->getId() + (int) pow(2, next - 1)) % (int) pow(2, spacesize - 1));
+	fingerTable[next - 1] = findSuccessor((thisNode->getId() + (int) pow(2,
+			next - 1)) % (int) pow(2, spacesize - 1));
 }
 
+Node* AbstractChord::fixBrokenFingersTable(Node *node) {
+	for (int i = 0; i < fingerTable.size() - 1; i++) {
+		if (fingerTable[i]->getId() == node->getId()) {
+			fingerTable[i] = new Node(thisNode->toString());
+		}
+	}
+	if (predecessor->getId() == node->getId()) {
+		cout << "predecessor fixed!\n";
+		predecessor = new Node(thisNode->toString());
+	}
+	if (successor->getId() == node->getId()) {
+		cout << "successor fixed!\n";
+		successor = new Node(thisNode->toString());
+	}
+	return thisNode;
+}
+
+void AbstractChord::checkPredecessor() {
+	Request *request = new Request(this->getIdentifier(), CHECKPRED);
+	sendRequest(request, predecessor);
+}
 
 // /////////////////////////////////////////// //
 //               HELPER METHODS                //
 // /////////////////////////////////////////// //
-bool AbstractChord::insideRange(int id, int begin, int end)
-{
+bool AbstractChord::insideRange(int id, int begin, int end) {
 	int MAXid = pow(2, spacesize);
 	int MINid = 0;
 
-	return	(begin < end && begin <= id && id <= end) ||
-			(begin > end && ((begin <= id && id <= MAXid) ||
-					(MINid <= id && id <= end))) ||
-					((begin == end) && (id == begin));
+	return (begin < end && begin <= id && id <= end) || (begin > end && ((begin
+			<= id && id <= MAXid) || (MINid <= id && id <= end))) || ((begin
+			== end) && (id == begin));
 
 }
 
-string AbstractChord::printStatus()
-{
+string AbstractChord::printStatus() {
 	stringstream ss(stringstream::in | stringstream::out);
 
-	ss << getIdentifier() << " on " << thisNode->getIp() << ":" << thisNode->getPort() << "\n" <<
-			"<NODE: " << thisNode->getId() << ", PRED: " << predecessor->getId() << ", SUCC: " << successor->getId() << ">\n" <<
-			"\tFingers Table: [";
-	for (int i = 0 ; i < fingerTable.size() - 1; i++) {
+	ss << getIdentifier() << " on " << thisNode->getIp() << ":"
+			<< thisNode->getPort() << "\n" << "<NODE: " << thisNode->getId()
+			<< ", PRED: " << predecessor->getId() << ", SUCC: "
+			<< successor->getId() << ">\n" << "\tFingers Table: [";
+	for (int i = 0; i < fingerTable.size() - 1; i++) {
 		ss << fingerTable[i]->getId() << ", ";
 	}
 	ss << fingerTable[fingerTable.size() - 1]->getId() << "]\n\n";

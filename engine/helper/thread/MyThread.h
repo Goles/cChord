@@ -46,7 +46,7 @@ public:
 			{
 				myNode->stabilize();
 				myNode->fixFingersTable();
-//				myNode->printStatus();
+				myNode->checkPredecessor();
 				// micro to milli second converter
 				for(int i=0 ; i < 1000 ; i++){
 					this->usleep(myNode->getTimeToCheck());

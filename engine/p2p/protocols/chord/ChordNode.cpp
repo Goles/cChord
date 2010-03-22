@@ -171,7 +171,30 @@ int ChordNode::keyToH(string key) {
 
 /* Forward a message to a peer, the message is in the format: "<IP+PORT>,TRANSPORT_CODE" */
 string ChordNode::sendRequest(Request *request, Node* destination) {
-	return transport->sendRequest(request, destination);
+	// CheckPredecessor use GETPRED request to check
+	// if the predecessor is still alive
+	if (request->getCode() == CHECKPRED) {
+		request->setCode(GETPRED);
+		if (!transport->sendRequest(request, destination)) {
+			predecessor = thisNode;
+		}
+		return "";
+	} else {
+		char *response = transport->sendRequest(request, destination);
+		if (response) {
+			stringstream ss;
+			ss << response;
+			free(response); // we must free the initial char* response, to avoid leaks.
+			return ss.str();
+		} else {
+			// re-build the broken FingerTable and try to send again the request
+			fixBrokenFingersTable(destination);
+			// time to fix the chord
+			sleep(1);
+			// try again the request with a new destination
+			return sendRequest(request, findSuccessor(destination->getId()));
+		}
+	}
 }
 
 /* Starts up the "stabilizer thread" for this peer. */

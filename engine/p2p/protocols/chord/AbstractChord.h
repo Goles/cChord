@@ -41,6 +41,8 @@ public:
 	void			stabilize();
 	void			notify(Node* n);
 	void			fixFingersTable();
+	void 			checkPredecessor();
+	Node* 			fixBrokenFingersTable(Node *node);
 	void			join(Node* chord);
 
 	virtual void	checkStable() = 0;

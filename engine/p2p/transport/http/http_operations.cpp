@@ -62,7 +62,7 @@ char* sendPost(char *hostName, int port, char *page, char *postString)
 	//TODO: Still have to make all the checks if connect fails etc.
 	if ((hptr = gethostbyname(hostName)) == NULL) {
 		fprintf(stderr, " gethostbyname error for host: %s: %s", hostName, hstrerror(h_errno));
-		return (char *)"ERROR"; //false
+		return NULL;
 	}
    
 	//printf("hostname: %s\n", hptr->h_name);

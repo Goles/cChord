@@ -21,7 +21,7 @@
 class ITransport
 {
 public:
-	virtual string	sendRequest(Request *request, Node *destination) = 0;
+	virtual char*	sendRequest(Request *request, Node *destination) = 0;
 	virtual	string	connectToTracker(const string &ip, int port, Node *n) = 0;
 	int				getPort() { return port; }
 	void			setPort( int p ) { port = p; }

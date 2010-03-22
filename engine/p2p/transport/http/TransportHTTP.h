@@ -26,7 +26,7 @@ public:
 	~TransportHTTP();
 
 	//API methods
-	string	sendRequest(Request *request, Node *destination);
+	char*	sendRequest(Request *request, Node *destination);
 	string	sendTrackerRequest(const string &host, int port, const string &callback);
 	string	doStuff(const string &code);
 	void	test();

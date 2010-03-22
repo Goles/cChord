@@ -19,7 +19,8 @@ typedef enum
 	PUT,
 	GET,
 	SETSUCC,
-	SETPRED
+	SETPRED,
+	CHECKPRED
 } transportCode;
 
 #endif
