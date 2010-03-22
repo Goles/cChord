@@ -19,7 +19,7 @@
 #include "Thread.h"
 #include "ChordNode.h"
 
-class MyThread: public Thread {
+class Stabilization: public Thread {
 private:
 
 	int id;
@@ -27,12 +27,12 @@ private:
 
 public:
 
-	MyThread(int i) :
+	Stabilization(int i) :
 		Thread() {
 		this->id = i;
 	}
 
-	MyThread(int i, ChordNode *node) {
+	Stabilization(int i, ChordNode *node) {
 		this->id = i;
 		myNode = node;
 	}

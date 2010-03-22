@@ -8,7 +8,7 @@
  */
 
 #include "ChordNode.h"
-#include "MyThread.h"
+#include "Stabilization.h"
 #include "tomcrypt.h"
 #include "sha1toint.h"
 #include "TransportHTTP.h"
@@ -69,7 +69,7 @@ void ChordNode::initializer(const string &ip, int port,
 void ChordNode::initializer(const string &ip, int port,
 		const string &overlayIntifier, unsigned int id) {
 	//create our stabilizer thread instance.
-	stableThread = new MyThread(0, this);
+	stableThread = new Stabilization(0, this);
 
 	//Initialize the transport layer.
 	transport = new TransportHTTP(port);

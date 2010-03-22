@@ -20,7 +20,7 @@
 #include <string>
 #include <map>
 
-class MyThread;
+class Stabilization;
 
 using namespace std;
 
@@ -75,7 +75,7 @@ protected:
 	TransportHTTP* transport;
 
 private:
-	MyThread* stableThread;
+	Stabilization* stableThread;
 	string overlayIntifier;
 	bool notified;
 	// Part of the DHT
