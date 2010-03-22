@@ -131,7 +131,15 @@ void call_chord_setsucc(struct mg_connection *conn,
 						const struct mg_request_info *request_info,
 						void *user_data)
 {
-	//
+	char *n = NULL;
+	//assert(mg_get_var(conn, "overlay_id") != NULL); <== NEEDS TO BE DONE BEFORE!!! XD
+	assert((n = mg_get_var(conn, "successor")) != NULL);
+
+	Node *node = new Node(n);
+	P_SINGLETON->getChordNode()->setSuccessor(node);
+
+//	//Release the allocated memory for id variable.
+	mg_free(n);
 }
 
 /*
@@ -141,5 +149,13 @@ void call_chord_setpred(struct mg_connection *conn,
 						const struct mg_request_info *request_info,
 						void *user_data)
 {
-	//
+	char *n = NULL;
+	//assert(mg_get_var(conn, "overlay_id") != NULL); <== NEEDS TO BE DONE BEFORE!!! XD
+	assert((n = mg_get_var(conn, "predecessor")) != NULL);
+
+	Node *node = new Node(n);
+	P_SINGLETON->getChordNode()->setPredecessor(node);
+
+//	//Release the allocated memory for id variable.
+	mg_free(n);
 }
