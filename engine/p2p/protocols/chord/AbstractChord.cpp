@@ -111,7 +111,7 @@ void AbstractChord::fixFingersTable() {
 		next = 1;
 	}
 	fingerTable[next - 1] = findSuccessor((thisNode->getId() + (int) pow(2,
-			next - 1)) % (int) pow(2, spacesize - 1));
+			next - 1)) % (int) pow(2, spacesize));
 }
 
 Node* AbstractChord::fixBrokenFingersTable(Node *node) {
