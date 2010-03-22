@@ -2,8 +2,8 @@
  *  Chord.cpp
  *  iPhone_p2p_engine
  *
- *  Created by Nicolas Goles on 1/15/10.
- *  Copyright 2010 __MyCompanyName__. All rights reserved.
+ *  Created by LogNet team 2010 - INRIA
+ *  Mediteranee - Sophia Antipolis - France
  *
  */
 

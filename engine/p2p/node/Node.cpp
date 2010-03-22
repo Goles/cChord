@@ -2,8 +2,8 @@
  *  Node.cpp
  *  iPhone_p2p_engine
  *
- *  Created by Nicolas Goles on 1/14/10.
- *  Copyright 2010 INRIA Lognet. All rights reserved.
+ *  Created by LogNet team 2010 - INRIA
+ *  Mediteranee - Sophia Antipolis - France
  *
  */
 
@@ -15,46 +15,41 @@
 /*
  *	Constructors
  */
-Node::Node(const string &inIp, unsigned int inId, unsigned int inPort)
-{
-	ip		= inIp;
-	nid		= inId;
-	port	= inPort;
-	
+Node::Node(const string &inIp, unsigned int inId, unsigned int inPort) {
+	ip = inIp;
+	nid = inId;
+	port = inPort;
+
 	//Transform the nid into a string for later usage.
-	char nidBuffer[255];	
+	char nidBuffer[255];
 	sprintf(nidBuffer, "%d", nid);
 	nidS = string(nidBuffer);
 }
 
-Node::Node(const string &inIp, unsigned int inPort)
-{
-	ip		= inIp;
-	nid		= 0;
-	port	= inPort;
-	
+Node::Node(const string &inIp, unsigned int inPort) {
+	ip = inIp;
+	nid = 0;
+	port = inPort;
+
 	//Transform the nid into a string for later usage.
-	char nidBuffer[255];	
+	char nidBuffer[255];
 	sprintf(nidBuffer, "%d", nid);
 	nidS = string(nidBuffer);
 }
 
-Node::Node(const string &inData)
-{
+Node::Node(const string &inData) {
 	stringstream ss(inData);
-	stringstream ipStream (stringstream::in | stringstream::out);
+	stringstream ipStream(stringstream::in | stringstream::out);
 
-	int ipa,
-		ipb,
-		ipc,
-		ipd;
+	int ipa, ipb, ipc, ipd;
 
 	char ch;
 
 	int inID;
 	int inPort;
 
-	ss >> ipa >> ch >> ipb >> ch >> ipc >> ch >> ipd >> ch >> inID >> ch >> inPort;
+	ss >> ipa >> ch >> ipb >> ch >> ipc >> ch >> ipd >> ch >> inID >> ch
+			>> inPort;
 
 	ipStream << ipa << "." << ipb << "." << ipc << "." << ipd;
 
@@ -73,31 +68,28 @@ Node::Node(const string &inData)
 /*
  *	Action Methods
  */
-bool Node::equals(Node *aNode)
-{
-	if(aNode != NULL)
-		return((aNode->getId() == nid) && 
-			   (aNode->getPort() == port) && 
-			   (aNode->getIp() == ip));
-	
+bool Node::equals(Node *aNode) {
+	if (aNode != NULL)
+		return ((aNode->getId() == nid) && (aNode->getPort() == port)
+				&& (aNode->getIp() == ip));
+
 	return false;
 }
 
-string Node::toString()
-{
+string Node::toString() {
 	ostringstream ss;
-	
+
 	char portBuffer[255];
-//	char nidBuffer[255];
-	
+	//	char nidBuffer[255];
+
 	sprintf(portBuffer, "%d", port);
-//	sprintf(nidBuffer, "%d", nid);
-	
+	//	sprintf(nidBuffer, "%d", nid);
+
 	string portS(portBuffer);
-//	string nidS(nidBuffer);
-	
+	//	string nidS(nidBuffer);
+
 	ss << ip << "," << nidS << "," << portS;
-	
-	return(ss.str());
+
+	return (ss.str());
 }
 

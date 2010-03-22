@@ -2,8 +2,8 @@
  *  MyThread.h
  *  iPhone_p2p_engine
  *
- *  Created by Nicolas Goles on 1/18/10.
- *  Copyright 2010 INRIA Lognet. All rights reserved.
+ *  Created by LogNet team 2010 - INRIA
+ *  Mediteranee - Sophia Antipolis - France
  *
  */
 
@@ -19,39 +19,36 @@
 #include "Thread.h"
 #include "ChordNode.h"
 
-class MyThread : public Thread {
+class MyThread: public Thread {
 private:
-	
+
 	int id;
 	ChordNode *myNode;
-	
+
 public:
-	
-	MyThread(int i) : Thread() {
+
+	MyThread(int i) :
+		Thread() {
 		this->id = i;
 	}
 
-	MyThread(int i, ChordNode *node)
-	{
+	MyThread(int i, ChordNode *node) {
 		this->id = i;
 		myNode = node;
 	}
-	
-	void run()
-	{
+
+	void run() {
 		/*Still have to implement a try-catch here*/
-		if(myNode != NULL)
-		{
-			while(myNode->getAlive())
-			{
+		if (myNode != NULL) {
+			while (myNode->getAlive()) {
 				myNode->stabilize();
 				myNode->fixFingersTable();
 				myNode->checkPredecessor();
 				// micro to milli second converter
-				for(int i=0 ; i < 1000 ; i++){
+				for (int i = 0; i < 1000; i++) {
 					this->usleep(myNode->getTimeToCheck());
 				}
-			}			
+			}
 		}
 	}
 };

@@ -34,20 +34,20 @@ string Request::getArg(string key) {
 	return "";
 }
 
-unsigned int Request::getMD5(string str){
-	
+unsigned int Request::getMD5(string str) {
+
 	hash_state md;
-	unsigned char out [16];
-	
+	unsigned char out[16];
+
 	//Initialize the MD5 hash function according to Tomcrypt library.
 	md5_init(&md);
-	
+
 	//Apply SHA-1 to the input string.
-	md5_process(&md, (unsigned char *)str.c_str(), str.length());
-	
+	md5_process(&md, (unsigned char *) str.c_str(), str.length());
+
 	//Get the hash output.
 	md5_done(&md, out);
-	
+
 	return md5toInt(out);
 }
 

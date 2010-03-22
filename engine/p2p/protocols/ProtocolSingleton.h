@@ -2,8 +2,8 @@
  *  ProtocolSingleton.h
  *  P2P_Engine
  *
- *  Created by Nicolas Goles on 2/9/10.
- *  Copyright 2010 INRIA Lognet. All rights reserved.
+ *  Created by LogNet team 2010 - INRIA
+ *  Mediteranee - Sophia Antipolis - France
  *
  */
 

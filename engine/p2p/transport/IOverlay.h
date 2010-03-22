@@ -2,8 +2,8 @@
  *  IOverlay.h
  *  iPhone_p2p_engine
  *
- *  Created by Nicolas Goles on 1/26/10.
- *  Copyright 2010 __MyCompanyName__. All rights reserved.
+ *  Created by LogNet team 2010 - INRIA
+ *  Mediteranee - Sophia Antipolis - France
  *
  */
 
@@ -20,17 +20,15 @@
 #include "ITransport.h"
 #include <string>
 
-class IOverlay: public IRequestHandler
-{
+class IOverlay: public IRequestHandler {
 public:
-	virtual string		getIdentifier()			= 0;
-	virtual int			keyToH(string key)		= 0;
-	virtual ITransport* getTransport()			= 0;
-	virtual Node*		getThisNode()			= 0;
-	
-	virtual void	put(string key, string value) = 0;
-	virtual string	get(string key) = 0;
-};
+	virtual string getIdentifier() = 0;
+	virtual int keyToH(string key) = 0;
+	virtual ITransport* getTransport() = 0;
+	virtual Node* getThisNode() = 0;
 
+	virtual void put(string key, string value) = 0;
+	virtual string get(string key) = 0;
+};
 
 #endif

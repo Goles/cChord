@@ -2,16 +2,8 @@
  *  AbstractChord.h
  *  iPhone_p2p_engine
  *
- *  Created by Nicolas Goles on 1/15/10.
- *  Copyright 2010 INRIA - Lognet. All rights reserved.
- *
- *	The original Java Chord class used a nice interface and abstract
- *	class pattern. However interfaces are not very nice in C++... so
- *	this Abstract class is suposed to be used by "subclassing" it 
- *	(inhertance). There the virtual methods must be declared and overriding
- *	some of the Chord Class methods is also a possibility.
- *
- *	_NG
+ *  Created by LogNet team 2010 - INRIA
+ *  Mediteranee - Sophia Antipolis - France
  *
  */
 
