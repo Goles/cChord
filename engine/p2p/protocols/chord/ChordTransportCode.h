@@ -17,6 +17,7 @@ typedef enum {
 	JOIN,
 	PUT,
 	GET,
+	REMOVEKEY,
 	SETSUCC,
 	SETPRED,
 	CHECKPRED

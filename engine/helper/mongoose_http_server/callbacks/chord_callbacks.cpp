@@ -113,6 +113,21 @@ void call_chord_get(struct mg_connection *conn,
 }
 
 /*
+ *	/get callback, handles a get peer request.
+ */
+void call_chord_removekey(struct mg_connection *conn,
+					const struct mg_request_info *request_info, void *user_data) {
+	char *key = NULL;
+	
+	assert((key = mg_get_var(conn, "key")) != NULL);
+	
+	P_SINGLETON->getChordNode()->removekey(key);
+	
+	//Release the allocated memory for id variable.
+	mg_free(key);
+}
+
+/*
  *	/setsucc callback, handles a set successor peer request.
  */
 void call_chord_setsucc(struct mg_connection *conn,

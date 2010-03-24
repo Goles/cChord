@@ -162,6 +162,26 @@ string ChordNode::get(string key) {
 		return sendRequest(request, responsible);
 	}
 }
+/* DHT Remove */
+void ChordNode::removekey(string key) {
+	// Convert the key in a hash integer
+	int hKey = keyToH(key);
+	if (insideRange(hKey, predecessor->getId() + 1, thisNode->getId())) {
+		// I'm responsible for this key
+		dataMap::iterator it = table.find(key);
+		if (it != table.end()) {
+			table.erase(it);
+		}
+	} else {
+		// Find the node responsible for this key
+		Node *responsible = findSuccessor(hKey);
+		// Create a Put request.
+		Request *request = new Request(this->getIdentifier(), REMOVEKEY);
+		request->addArg("key", key);
+		// Send the Put request
+		sendRequest(request, responsible);
+	}
+}
 
 /* Convert a string key to an integer (using hash function) */
 int ChordNode::keyToH(string key) {

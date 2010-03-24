@@ -90,6 +90,7 @@ void TransportHTTP::initCallbacks() {
 		mg_set_uri_callback(ctx, "/join", &call_chord_join, NULL);
 		mg_set_uri_callback(ctx, "/put", &call_chord_put, NULL);
 		mg_set_uri_callback(ctx, "/get", &call_chord_get, NULL);
+		mg_set_uri_callback(ctx, "/removekey", &call_chord_removekey, NULL);
 		mg_set_uri_callback(ctx, "/setsucc", &call_chord_setsucc, NULL);
 		mg_set_uri_callback(ctx, "/setpred", &call_chord_setpred, NULL);
 	}

@@ -77,6 +77,9 @@ string Request::serialize() {
 	case GET:
 		callback = new string("/get");
 		break;
+	case REMOVEKEY:
+		callback = new string("/removekey");
+		break;
 	case SETSUCC:
 		callback = new string("/setsucc");
 		break;

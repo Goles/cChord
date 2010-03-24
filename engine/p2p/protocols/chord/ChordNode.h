@@ -57,16 +57,12 @@ public:
 	/* IOverlay Pure METHODS */
 	void put(string key, string value);
 	string get(string key);
+	void removekey(string key);
 	int keyToH(string key);
-	string getIdentifier() {
-		return overlayIntifier;
-	}
-	ITransport* getTransport() {
-		return transport;
-	}
-	Node* getThisNode() {
-		return thisNode;
-	}
+	
+	string		getIdentifier() { return overlayIntifier; }
+	ITransport* getTransport()	{ return transport; }
+	Node*		getThisNode()	{ return thisNode; }
 
 	/* Helper Methods */
 	string printTable();
