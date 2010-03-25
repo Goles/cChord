@@ -27,15 +27,8 @@ using namespace std;
 class ChordNode: public AbstractChord {
 public:
 	/* Constructor & Destructor */
-	ChordNode(const string &ip, int port);
-	ChordNode(const string &ip, int port, const string &s);
-	ChordNode(const string &ip, int port, const string &s, unsigned int id); // To test you can define the id manually
+	ChordNode(const string &ip, int port, const string &overlayIntifier, unsigned int id, const string &rootDirectory);
 	~ChordNode();
-
-	/* Initializer Methods */
-	void initializer(const string &ip, int port, const string &overlayIntifier); // Initialization which use SHA-1
-	void initializer(const string &ip, int port, const string &overlayIntifier,
-			unsigned int id); // Initialization by default
 
 	/* Setters */
 	void setIdentifier(const string &iD) {

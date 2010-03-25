@@ -21,7 +21,7 @@ class ChordNode;
 class TransportHTTP: public ITransport {
 public:
 	//Constructor & Destructor.
-	TransportHTTP(int port);
+	TransportHTTP(int port, const string &root);
 	~TransportHTTP();
 
 	//API methods
@@ -44,6 +44,7 @@ private:
 
 protected:
 	int myPort;
+	string root;
 };
 
 #endif

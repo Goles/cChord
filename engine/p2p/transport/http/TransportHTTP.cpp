@@ -22,10 +22,11 @@
 /*
  * Constructor & Destructor.
  */
-TransportHTTP::TransportHTTP(int port) {
+TransportHTTP::TransportHTTP(int port, const string &root) {
 	//Constructor.
 	this->setPort(port);
 	myPort = port;
+	this->root = root;
 
 	//Initialize the webserver
 	this->startHTTP();
@@ -47,7 +48,7 @@ void TransportHTTP::startHTTP() {
 	string a(buffer);
 
 	this->ctx = mg_start(); // Start Mongoose serving context thread
-	mg_set_option(ctx, "root", "."); // Set document root
+	mg_set_option(ctx, "root", this->root.c_str()); // Set document root
 	mg_set_option(ctx, "ports", a.c_str()); // Listen on port XXXX
 	this->initCallbacks();
 

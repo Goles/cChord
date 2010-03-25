@@ -18,61 +18,33 @@
 #include <assert.h>
 #include <math.h>
 
-/* Constructor & Destructor */
-ChordNode::ChordNode(const string &ip, int port) {
-	stringstream ss(stringstream::in | stringstream::out);
+/* Constructor */
+ChordNode::ChordNode(const string &ip, int port, const string &overlayIntifier,
+		unsigned int id, const string &rootDirectory) {
 
-	//construct the overlayIdentifier.
-	ss << "<" << ip << port << ">";
+	// Create an id based on SHA1
+	if (id == 0) {
+		//Allocate the container for the hash.
+		unsigned char out[overlayIntifier.length()];
 
-	//Init the node.
-	this->initializer(ip, port, ss.str());
-}
+		//Initialize the SHA-1 hash function according to Tomcrypt library.
+		hash_state sha1;
+		sha1_init(&sha1);
 
-ChordNode::ChordNode(const string &ip, int port, const string &s) {
-	this->initializer(ip, port, s);
-}
+		//Apply SHA-1 to the overlayIntifier.
+		unsigned char *in = (unsigned char*) overlayIntifier.c_str();
+		sha1_process(&sha1, in, overlayIntifier.length());
+		sha1_done(&sha1, out);
 
-ChordNode::ChordNode(const string &ip, int port, const string &s,
-		unsigned int id) {
-	this->initializer(ip, port, s, id);
-}
+		//Transform the SHA-1 String to an integer.
+		id = sha1ToInt(out);
+	}
 
-ChordNode::~ChordNode() {
-	stableThread->kill();
-	delete stableThread;
-	delete transport;
-}
-
-/* Init */
-void ChordNode::initializer(const string &ip, int port,
-		const string &overlayIntifier) {
-	//Allocate the container for the hash.
-	unsigned char out[overlayIntifier.length()];
-
-	//Initialize the SHA-1 hash function according to Tomcrypt library.
-	hash_state sha1;
-	sha1_init(&sha1);
-
-	//Apply SHA-1 to the overlayIntifier.
-	unsigned char *in = (unsigned char*) overlayIntifier.c_str();
-	sha1_process(&sha1, in, overlayIntifier.length());
-	sha1_done(&sha1, out);
-
-	//Transform the SHA-1 String to an integer.
-	unsigned int id = sha1ToInt(out);
-
-	//call default initializer
-	this->initializer(ip, port, overlayIntifier, id);
-}
-
-void ChordNode::initializer(const string &ip, int port,
-		const string &overlayIntifier, unsigned int id) {
 	//create our stabilizer thread instance.
 	stableThread = new Stabilization(0, this);
 
 	//Initialize the transport layer.
-	transport = new TransportHTTP(port);
+	transport = new TransportHTTP(port, rootDirectory);
 
 	//set the overlay identifier.
 	this->overlayIntifier = overlayIntifier;
@@ -88,6 +60,14 @@ void ChordNode::initializer(const string &ip, int port,
 
 	//We start-up our stabilizer thread.
 	checkStable();
+
+}
+
+/* Destructor */
+ChordNode::~ChordNode() {
+	stableThread->kill();
+	delete stableThread;
+	delete transport;
 }
 
 /* Override from AbstractChord */
