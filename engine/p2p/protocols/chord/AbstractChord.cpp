@@ -24,7 +24,6 @@ void AbstractChord::initialise(string ip, int id, int port) {
 	predecessor = thisNode;
 	next = 0; // C++ we have to set next to zero to avoid possible garbage...
 	alive = true;
-	spacesize = 9;
 	timeToCheck = 250; // miliSecond
 
 	for (int i = 0; i < spacesize; i++) {

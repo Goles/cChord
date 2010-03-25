@@ -57,7 +57,7 @@ public:
 	void addArg(string key, string value);
 	string getArg(string key);
 	string serialize();
-	unsigned int getMD5(string str);
+	unsigned int getCheckSum(string str);
 
 private:
 	typedef std::pair<string, string> arg;

@@ -10,7 +10,6 @@
 #include "Request.h"
 #include "ChordTransportCode.h"
 #include "tomcrypt.h"
-#include "sha1toint.h"
 
 /* Constructor */
 Request::Request(string overlayID, int code) {
@@ -34,7 +33,7 @@ string Request::getArg(string key) {
 	return "";
 }
 
-unsigned int Request::getMD5(string str) {
+unsigned int Request::getCheckSum(string str) {
 
 	hash_state md;
 	unsigned char out[16];
@@ -48,7 +47,12 @@ unsigned int Request::getMD5(string str) {
 	//Get the hash output.
 	md5_done(&md, out);
 
-	return md5toInt(out);
+	// transform the md5 string to an integer
+	unsigned int md5toInt = 0;
+	for (int i = 0; i < strlen((const char *) out) + 1; i++)
+		md5toInt = md5toInt * 256 + (out[i] & 0xff);
+
+	return md5toInt;
 }
 
 /* Serialize the whole request into a callback string. "/callback?var1=a&var2=b....&var1000=bar" */
@@ -92,23 +96,12 @@ string Request::serialize() {
 		break;
 	}
 
-	ss << (*callback);
-	ss << "?checksum=" << getMD5(ss.str());
-	int mapSize = 0;
-
-	if ((mapSize = arguments.size()) > 0) {
-		ss << "&";
-		int i = 0;
-		for (it = arguments.begin(); it != arguments.end(); ++it) {
-			ss << (*it).first << "=" << (*it).second;
-
-			if (i < mapSize - 1) {
-				ss << "&";
-				i++;
-			}
-		}
+	ss << (*callback) << "?";
+	for (it = arguments.begin(); it != arguments.end(); ++it) {
+		ss << (*it).first << "=" << (*it).second << "&";
 	}
-
+	ss << "checksum=" << getCheckSum(ss.str());
+//	cout << ss.str() << endl;
 	return ss.str();
 }
 

@@ -27,12 +27,12 @@ using namespace std;
 class ChordNode: public AbstractChord {
 public:
 	/* Constructor & Destructor */
-	ChordNode(const string &ip, int port, const string &overlayIntifier, unsigned int id, const string &rootDirectory);
+	ChordNode(const string &ip, int port, const string &overlayIdentifier, int id, const string &rootDirectory);
 	~ChordNode();
 
 	/* Setters */
 	void setIdentifier(const string &iD) {
-		overlayIntifier = iD;
+		overlayIdentifier = iD;
 	}
 	void setTransport(TransportHTTP *t) {
 		transport = t;
@@ -51,9 +51,9 @@ public:
 	void put(string key, string value);
 	string get(string key);
 	void removekey(string key);
-	int keyToH(string key);
+	unsigned int getMD5(string key);
 	
-	string		getIdentifier() { return overlayIntifier; }
+	string		getIdentifier() { return overlayIdentifier; }
 	ITransport* getTransport()	{ return transport; }
 	Node*		getThisNode()	{ return thisNode; }
 
@@ -65,7 +65,7 @@ protected:
 
 private:
 	Stabilization* stableThread;
-	string overlayIntifier;
+	string overlayIdentifier;
 	bool notified;
 	// Part of the DHT
 	typedef std::pair<string, string> data;

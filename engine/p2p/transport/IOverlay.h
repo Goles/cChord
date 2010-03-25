@@ -23,7 +23,6 @@
 class IOverlay: public IRequestHandler {
 public:
 	virtual string getIdentifier() = 0;
-	virtual int keyToH(string key) = 0;
 	virtual ITransport* getTransport() = 0;
 	virtual Node* getThisNode() = 0;
 

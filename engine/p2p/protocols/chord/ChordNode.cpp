@@ -10,7 +10,6 @@
 #include "ChordNode.h"
 #include "Stabilization.h"
 #include "tomcrypt.h"
-#include "sha1toint.h"
 #include "TransportHTTP.h"
 #include "callbacks.h"
 #include <sstream>
@@ -19,26 +18,14 @@
 #include <math.h>
 
 /* Constructor */
-ChordNode::ChordNode(const string &ip, int port, const string &overlayIntifier,
-		unsigned int id, const string &rootDirectory) {
+ChordNode::ChordNode(const string &ip, int port, const string &overlayIdentifier,
+		int id, const string &rootDirectory) {
 
-	// Create an id based on SHA1
-	if (id == 0) {
-		//Allocate the container for the hash.
-		unsigned char out[overlayIntifier.length()];
+	// Define the address space size
+	spacesize = 9;
 
-		//Initialize the SHA-1 hash function according to Tomcrypt library.
-		hash_state sha1;
-		sha1_init(&sha1);
-
-		//Apply SHA-1 to the overlayIntifier.
-		unsigned char *in = (unsigned char*) overlayIntifier.c_str();
-		sha1_process(&sha1, in, overlayIntifier.length());
-		sha1_done(&sha1, out);
-
-		//Transform the SHA-1 String to an integer.
-		id = sha1ToInt(out);
-	}
+	// check if the idE[0, 2^(spacesize - 1)]
+	assert(!(id > pow(2, spacesize)) && !(id < 0));
 
 	//create our stabilizer thread instance.
 	stableThread = new Stabilization(0, this);
@@ -47,16 +34,13 @@ ChordNode::ChordNode(const string &ip, int port, const string &overlayIntifier,
 	transport = new TransportHTTP(port, rootDirectory);
 
 	//set the overlay identifier.
-	this->overlayIntifier = overlayIntifier;
+	this->overlayIdentifier = overlayIdentifier;
 
 	// not yet notified
 	notified = false;
 
 	//Call our parent's initializer
 	initialise(ip, id, port);
-
-	// check if the idE[0, 2^(spacesize - 1)]
-	assert(!(id > pow(2, spacesize)));
 
 	//We start-up our stabilizer thread.
 	checkStable();
@@ -103,7 +87,7 @@ void ChordNode::stabilize() {
 /* DHT Put */
 void ChordNode::put(string key, string value) {
 	// Convert the key in a hash integer
-	int hKey = keyToH(key);
+	int hKey = getMD5(key);
 	if (insideRange(hKey, predecessor->getId() + 1, thisNode->getId())) {
 		// I'm responsible for this key
 		table.insert(data(key, value));
@@ -122,7 +106,7 @@ void ChordNode::put(string key, string value) {
 /* DHT Get */
 string ChordNode::get(string key) {
 	// Convert the key in a hash integer
-	int hKey = keyToH(key);
+	int hKey = getMD5(key);
 	if (insideRange(hKey, predecessor->getId() + 1, thisNode->getId())) {
 		// I'm responsible for this key
 		dataMap::iterator it = table.find(key);
@@ -145,7 +129,7 @@ string ChordNode::get(string key) {
 /* DHT Remove */
 void ChordNode::removekey(string key) {
 	// Convert the key in a hash integer
-	int hKey = keyToH(key);
+	int hKey = getMD5(key);
 	if (insideRange(hKey, predecessor->getId() + 1, thisNode->getId())) {
 		// I'm responsible for this key
 		dataMap::iterator it = table.find(key);
@@ -163,10 +147,36 @@ void ChordNode::removekey(string key) {
 	}
 }
 
-/* Convert a string key to an integer (using hash function) */
-int ChordNode::keyToH(string key) {
-	// HASH FUNCTION IS NOT IMPLEMENTED YET...
-	return atoi(key.c_str());
+/* Convert a string to an integer (using MD5) */
+unsigned int ChordNode::getMD5(string str) {
+//	// The integer value depend of the overlayIdentifier
+//	str.append(overlayIdentifier.c_str());
+//
+//	hash_state md;
+//	unsigned char md5[16];
+//
+//	//Initialize the MD5 hash function according to Tomcrypt library.
+//	md5_init(&md);
+//
+//	//Apply SHA-1 to the input string.
+//	md5_process(&md, (unsigned char *) str.c_str(), str.length());
+//
+//	//Get the hash output.
+//	md5_done(&md, md5);
+//
+//	// transform the md5 string to an integer
+//	unsigned int md5toInt = 0;
+//	for (int i = 0; i < strlen((const char *) md5) + 1; i++)
+//		md5toInt = md5toInt * 256 + (md5[i] & 0xff);
+//
+//	// check if the idE[0, 2^(spacesize - 1)]
+//	assert(!(md5toInt > pow(2, spacesize)));
+//
+//	return md5toInt;
+
+	int md5 = atoi(str.c_str());
+	assert(!(md5 > pow(2, spacesize)) && !(md5 < 0));
+	return md5;
 }
 
 /* Forward a message to a peer, the message is in the format: "<IP+PORT>,TRANSPORT_CODE" */
