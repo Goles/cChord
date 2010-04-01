@@ -1,5 +1,5 @@
 /*
- *  Stabilization.h
+ *  CheckPred.h
  *  iPhone_p2p_engine
  *
  *  Created by LogNet team 2010 - INRIA
@@ -13,22 +13,20 @@
  *	_NG
  */
 
-#ifndef STABILIZATION_H
-#define STABILIZATION_H
+#ifndef CHECKPRED_H
+#define CHECKPRED_H
 
 #include "Thread.h"
 #include "ChordNode.h"
 #include "ProtocolSingleton.h"
 
-class Stabilization: public Thread {
+class CheckPred: public Thread {
 
 public:
-	Stabilization(ChordNode *n) { node = n; }
+	CheckPred(ChordNode *n){ node = n; }
 
 	void run() {
 		while (1) {
-			node->stabilize();
-			node->fixFingersTable();
 			node->checkPredecessor();
 			// wait... timeToCheck millisecond
 			for (int i = 0; i < 1000; i++) {

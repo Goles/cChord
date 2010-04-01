@@ -23,7 +23,6 @@ void AbstractChord::initialise(string ip, int id, int port) {
 	successor = thisNode;
 	predecessor = thisNode;
 	next = 0; // C++ we have to set next to zero to avoid possible garbage...
-	alive = true;
 	timeToCheck = 250; // miliSecond
 
 	for (int i = 0; i < spacesize; i++) {
@@ -97,9 +96,8 @@ void AbstractChord::stabilize() {
 }
 
 void AbstractChord::notify(Node *node) {
-	//	cout << "AbstractChord::notify()\n";
-	if ((predecessor == NULL) || (insideRange(node->getId(),
-			predecessor->getId() + 1, thisNode->getId() - 1)))
+	if ((predecessor->getId() == thisNode->getId()) ||
+			(insideRange(node->getId(), predecessor->getId() + 1, thisNode->getId() - 1)))
 		predecessor = node;
 
 }
@@ -113,25 +111,9 @@ void AbstractChord::fixFingersTable() {
 			next - 1)) % (int) pow(2, spacesize));
 }
 
-Node* AbstractChord::fixBrokenFingersTable(Node *node) {
-	for (int i = 0; i < fingerTable.size() - 1; i++) {
-		if (fingerTable[i]->getId() == node->getId()) {
-			fingerTable[i] = new Node(thisNode->toString());
-		}
-	}
-	if (predecessor->getId() == node->getId()) {
-		cout << "predecessor fixed!\n";
-		predecessor = new Node(thisNode->toString());
-	}
-	if (successor->getId() == node->getId()) {
-		cout << "successor fixed!\n";
-		successor = new Node(thisNode->toString());
-	}
-	return thisNode;
-}
-
+/* called periodically. checks whether predecessor has failed*/
 void AbstractChord::checkPredecessor() {
-	Request *request = new Request(this->getIdentifier(), CHECKPRED);
+	Request *request = new Request(this->getIdentifier(), GETPRED);
 	sendRequest(request, predecessor);
 }
 

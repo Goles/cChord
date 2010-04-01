@@ -26,9 +26,9 @@ char* process_http(int sockfd, char *host, char *page, char *poststr) {
 		"%s", page, host, (int) strlen(poststr), poststr);
 
 	if (write(sockfd, sendline, sizeof(sendline)) == -1) {
-		printf("Failed to write to socket! \n");
-		printf("Check if socket is writeable.\n");
-		printf("Errno %d: %s\n", errno, strerror(errno));
+//		printf("Failed to write to socket! \n");
+//		printf("Check if socket is writeable.\n");
+//		printf("Errno %d: %s\n", errno, strerror(errno));
 
 		return NULL;
 	}

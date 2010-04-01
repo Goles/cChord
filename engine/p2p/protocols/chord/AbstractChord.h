@@ -33,9 +33,8 @@ public:
 	void			stabilize();
 	void			notify(Node* n);
 	void			fixFingersTable();
-	void 			checkPredecessor();
-	Node* 			fixBrokenFingersTable(Node *node);
 	void			join(Node* chord);
+	void			checkPredecessor();
 
 	virtual void	checkStable() = 0;
 	
@@ -54,9 +53,6 @@ public:
 	Node*	getPredecessor() { return predecessor; }
 	void	setPredecessor(Node* n) { predecessor = n; }
 
-	bool	getAlive() { return alive; }
-	void	setAlive(bool a) { alive = a; }
-	
 	int		getTimeToCheck() { return timeToCheck; }
 	void	setTimeToCheck(int t) { timeToCheck = t; }
 
@@ -89,8 +85,6 @@ protected:
 	
 	/** Time between each stabilization/fix fingerstable */
 	int timeToCheck;
-	
-	bool alive;
 };
 
 #endif

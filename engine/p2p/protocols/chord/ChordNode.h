@@ -21,6 +21,8 @@
 #include <map>
 
 class Stabilization;
+//class CheckPred;
+//class FixFinger;
 
 using namespace std;
 
@@ -40,6 +42,7 @@ public:
 
 	/* Action Methods */
 	virtual string sendRequest(Request *request, Node* destination);
+	virtual void   fixBrokenPointers(Node* node);
 	virtual void checkStable();
 	virtual void shutDown();
 
@@ -65,6 +68,9 @@ protected:
 
 private:
 	Stabilization* stableThread;
+//	CheckPred* checkPredThread;
+//	FixFinger* fixFingerThread;
+
 	string overlayIdentifier;
 	bool notified;
 	// Part of the DHT

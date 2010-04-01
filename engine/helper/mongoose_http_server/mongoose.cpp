@@ -44,6 +44,7 @@
 #include <limits.h>
 #include <stddef.h>
 #include <stdio.h>
+#include <iostream>
 
 #if defined(_WIN32)		/* Windows specific #includes and #defines */
 #define	_WIN32_WINNT	0x0400	/* To make it link in VS2005 */
@@ -3745,15 +3746,21 @@ set_ports_option(struct mg_context *ctx, const char *list)
 		if (ctx->num_listeners >=
 		    (int) (ARRAY_SIZE(ctx->listeners) - 1)) {
 			cry(fc(ctx), "%s", "Too many listeninig sockets");
+			std::cout << "mongoose.cpp:3748 => exit(-1)\n";
+			exit(-1);
 			return (FALSE);
 		} else if ((sock = mg_open_listening_port(ctx,
 		    vec.ptr, &listener->lsa)) == INVALID_SOCKET) {
 			cry(fc(ctx), "cannot bind to %.*s", vec.len, vec.ptr);
+			std::cout << "mongoose.cpp:3754 => exit(-1)\n";
+			exit(-1);
 			return (FALSE);
 		} else if (is_ssl == TRUE && ctx->ssl_ctx == NULL) {
 			(void) closesocket(sock);
 			cry(fc(ctx), "cannot add SSL socket, please specify "
 			    "-ssl_cert option BEFORE -ports option");
+			std::cout << "mongoose.cpp:3761 => exit(-1)\n";
+			exit(-1);
 			return (FALSE);
 		} else {
 			listener->sock = sock;

@@ -1,5 +1,5 @@
 /*
- *  Stabilization.h
+ *  FixFinger.h
  *  iPhone_p2p_engine
  *
  *  Created by LogNet team 2010 - INRIA
@@ -13,23 +13,21 @@
  *	_NG
  */
 
-#ifndef STABILIZATION_H
-#define STABILIZATION_H
+#ifndef FIXFINGER_H
+#define FIXFINGER_H
 
 #include "Thread.h"
 #include "ChordNode.h"
 #include "ProtocolSingleton.h"
 
-class Stabilization: public Thread {
+class FixFinger: public Thread {
 
 public:
-	Stabilization(ChordNode *n) { node = n; }
+	FixFinger(ChordNode *n){ node = n; }
 
 	void run() {
 		while (1) {
-			node->stabilize();
 			node->fixFingersTable();
-			node->checkPredecessor();
 			// wait... timeToCheck millisecond
 			for (int i = 0; i < 1000; i++) {
 				this->usleep(node->getTimeToCheck());
