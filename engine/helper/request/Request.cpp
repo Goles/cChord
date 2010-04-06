@@ -9,7 +9,6 @@
 
 #include "Request.h"
 #include "ChordTransportCode.h"
-#include "tomcrypt.h"
 
 /* Constructor */
 Request::Request(string overlayID, int code) {
@@ -35,24 +34,24 @@ string Request::getArg(string key) {
 
 unsigned int Request::getCheckSum(string str) {
 
-	hash_state md;
-	unsigned char out[16];
+//	hash_state md;
+//	unsigned char out[16];
+//
+//	//Initialize the MD5 hash function according to Tomcrypt library.
+//	md5_init(&md);
+//
+//	//Apply SHA-1 to the input string.
+//	md5_process(&md, (unsigned char *) str.c_str(), str.length());
+//
+//	//Get the hash output.
+//	md5_done(&md, out);
+//
+//	// transform the md5 string to an integer
+//	unsigned int md5toInt = 0;
+//	for (int i = 0; i < strlen((const char *) out) + 1; i++)
+//		md5toInt = md5toInt * 256 + (out[i] & 0xff);
 
-	//Initialize the MD5 hash function according to Tomcrypt library.
-	md5_init(&md);
-
-	//Apply SHA-1 to the input string.
-	md5_process(&md, (unsigned char *) str.c_str(), str.length());
-
-	//Get the hash output.
-	md5_done(&md, out);
-
-	// transform the md5 string to an integer
-	unsigned int md5toInt = 0;
-	for (int i = 0; i < strlen((const char *) out) + 1; i++)
-		md5toInt = md5toInt * 256 + (out[i] & 0xff);
-
-	return md5toInt;
+	return 0;
 }
 
 /* Serialize the whole request into a callback string. "/callback?var1=a&var2=b....&var1000=bar" */

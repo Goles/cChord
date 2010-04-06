@@ -11,7 +11,6 @@
 #include "Stabilization.h"
 #include "CheckPred.h"
 #include "FixFinger.h"
-#include "tomcrypt.h"
 #include "TransportHTTP.h"
 #include "callbacks.h"
 #include <sstream>

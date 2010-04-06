@@ -38,8 +38,7 @@ HEADER = $(shell for file in `find . -name *.h`;do echo $$file; done)
 
 INCLUDE = -I.\
 		-Iengine/helper\
-		-Iengine/helper/crypto/tomcrypt\
-		-Iengine/helper/crypto/tomcrypt/headers\
+		-Iengine/helper/crypto/\
 		-Iengine/helper/mongoose_http_server/callbacks\
 		-Iengine/helper/mongoose_http_server\
 		-Iengine/helper/thread\
@@ -57,9 +56,7 @@ all: MYMEDLIB libmymed.a
 
 MYMEDLIB : \
 		./HTTP_Client.o\
-		./crypt_argchk.o\
 		./sha1.o\
-		./md5.o\
 		./callbacks.o\
 		./tracker_callbacks.o\
 		./chord_callbacks.o\
@@ -83,9 +80,7 @@ libmymed.a:
 clean : 
 		rm -f \
 		./HTTP_Client.o\
-		./crypt_argchk.o\
 		./sha1.o\
-		./md5.o\
 		./callbacks.o\
 		./tracker_callbacks.o\
 		./chord_callbacks.o\
@@ -120,18 +115,21 @@ install : MYMEDLIB
 	$(CC) $(CCFLAGS) $(CC_OPTIONS) engine/helper/HTTP_Client.cpp -c $(INCLUDE) -o ./HTTP_Client.o
 
 
-# Item # 3 -- crypt_argchk --
-./crypt_argchk.o : engine/helper/crypto/tomcrypt/algorithms/crypt_argchk.c
-	$(CC) $(CCFLAGS) $(CC_OPTIONS) engine/helper/crypto/tomcrypt/algorithms/crypt_argchk.c -c $(INCLUDE) -o ./crypt_argchk.o
+## Item # 3 -- crypt_argchk --
+#./crypt_argchk.o : engine/helper/crypto/tomcrypt/algorithms/crypt_argchk.c
+#	$(CC) $(CCFLAGS) $(CC_OPTIONS) engine/helper/crypto/tomcrypt/algorithms/crypt_argchk.c -c $(INCLUDE) -o ./crypt_argchk.o
+#
+## Item # 4 -- sha1 --
+#./sha1.o : engine/helper/crypto/tomcrypt/algorithms/sha1.c
+#	$(CC) $(CCFLAGS) $(CC_OPTIONS) engine/helper/crypto/tomcrypt/algorithms/sha1.c -c $(INCLUDE) -o ./sha1.o
+#
+## Item # 5 -- md5 --
+#./md5.o : engine/helper/crypto/tomcrypt/algorithms/md5.c
+#	$(CC) $(CCFLAGS) $(CC_OPTIONS) engine/helper/crypto/tomcrypt/algorithms/md5.c -c $(INCLUDE) -o ./md5.o
 
-
-# Item # 4 -- sha1 --
-./sha1.o : engine/helper/crypto/tomcrypt/algorithms/sha1.c
-	$(CC) $(CCFLAGS) $(CC_OPTIONS) engine/helper/crypto/tomcrypt/algorithms/sha1.c -c $(INCLUDE) -o ./sha1.o
-
-# Item # 5 -- md5 --
-./md5.o : engine/helper/crypto/tomcrypt/algorithms/md5.c
-	$(CC) $(CCFLAGS) $(CC_OPTIONS) engine/helper/crypto/tomcrypt/algorithms/md5.c -c $(INCLUDE) -o ./md5.o
+# Item # 5 -- sha1 --
+./sha1.o: engine/helper/crypto/sha1.cpp
+	$(CC) $(CCFLAGS) $(CC_OPTIONS) engine/helper/crypto/sha1.cpp -c $(INCLUDE) -o ./sha1.o
 	
 # Item # 6 -- callbacks --
 ./callbacks.o : engine/helper/mongoose_http_server/callbacks/callbacks.cpp
