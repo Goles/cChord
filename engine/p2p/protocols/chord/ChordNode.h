@@ -54,13 +54,13 @@ public:
 	void put(string key, string value);
 	string get(string key);
 	void removekey(string key);
-	unsigned int getMD5(string key);
+	unsigned int getSHA1(string key);
 	
 	string		getIdentifier() { return overlayIdentifier; }
 	ITransport* getTransport()	{ return transport; }
 	Node*		getThisNode()	{ return thisNode; }
 
-	/* Helper Methods */
+	/* Helper Methosha1 = new SHA1();ds */
 	string printTable();
 
 protected:
@@ -68,9 +68,6 @@ protected:
 
 private:
 	Stabilization* stableThread;
-//	CheckPred* checkPredThread;
-//	FixFinger* fixFingerThread;
-
 	string overlayIdentifier;
 	bool notified;
 	// Part of the DHT

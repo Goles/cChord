@@ -9,8 +9,8 @@
 
 #include "Node.h"
 #include "Request.h"
-#include <iostream>
-#include <sstream>
+#include <stdio.h>
+#include <stdlib.h>
 
 /*
  *	Constructors
@@ -38,31 +38,21 @@ Node::Node(const string &inIp, unsigned int inPort) {
 }
 
 Node::Node(const string &inData) {
-	stringstream ss(inData);
-	stringstream ipStream(stringstream::in | stringstream::out);
+	string inID, inIP, inPort;
+	int at = inData.find("@");
+	inID = inData.substr(0, at);
+	int ddot = inData.find(":");
+	inIP = inData.substr(at+1, ddot-at-1);
+	inPort = inData.substr(ddot+1);
 
-	int ipa, ipb, ipc, ipd;
+//	cout << "\n***inID=" << inID << endl;
+//	cout << "***inIP=" << inIP << endl;
+//	cout << "***inPort=" << inPort << endl;
 
-	char ch;
-
-	int inID;
-	int inPort;
-
-	ss >> ipa >> ch >> ipb >> ch >> ipc >> ch >> ipd >> ch >> inID >> ch
-			>> inPort;
-
-	ipStream << ipa << "." << ipb << "." << ipc << "." << ipd;
-
-	string ip(ipStream.str());
-
-	this->ip = ip;
-	this->nid = inID;
-	this->port = inPort;
-
-	//Transform the nid into a string for later usage.
-	char nidBuffer[255];
-	sprintf(nidBuffer, "%d", nid);
-	nidS = string(nidBuffer);
+	this->nidS = inID;
+	this->nid = atoi(inID.c_str());
+	this->ip = inIP;
+	this->port = atoi(inPort.c_str());
 }
 
 /*
@@ -76,20 +66,13 @@ bool Node::equals(Node *aNode) {
 	return false;
 }
 
+/* format: <ID>@<IP>:<PORT> */
 string Node::toString() {
 	ostringstream ss;
-
 	char portBuffer[255];
-	//	char nidBuffer[255];
-
 	sprintf(portBuffer, "%d", port);
-	//	sprintf(nidBuffer, "%d", nid);
-
 	string portS(portBuffer);
-	//	string nidS(nidBuffer);
-
-	ss << ip << "," << nidS << "," << portS;
-
+	ss << nidS << "@" << ip << ":" << portS;
 	return (ss.str());
 }
 

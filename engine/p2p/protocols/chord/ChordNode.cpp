@@ -13,6 +13,7 @@
 #include "FixFinger.h"
 #include "TransportHTTP.h"
 #include "callbacks.h"
+#include "sha1.h";
 #include <sstream>
 #include <iostream>
 #include <assert.h>
@@ -25,13 +26,16 @@ ChordNode::ChordNode(const string &ip, int port, const string &overlayIdentifier
 	// Define the address space size
 	spacesize = 9;
 
+	// Create the id
+	std::ostringstream oss;
+	oss << ip << port;
+	id = getSHA1(oss.str());
+
 	// check if the idE[0, 2^(spacesize - 1)]
 	assert(!(id > pow(2, spacesize)) && !(id < 0));
 
 	//create our stabilizer threads instance.
 	stableThread = new Stabilization(this);
-//	fixFingerThread = new FixFinger(this);
-//	checkPredThread = new CheckPred(this);
 
 	//Initialize the transport layer.
 	transport = new TransportHTTP(port, rootDirectory);
@@ -69,7 +73,7 @@ void ChordNode::notify(Node *n) {
 void ChordNode::stabilize() {
 	((AbstractChord *) this)->stabilize();
 	// If the predecessor as changed, update the DHT table
-	if (notified) {
+	if (notified && predecessor->getId() != thisNode->getId()) {
 		for (dataMap::iterator it = table.begin(); it != table.end(); ++it) {
 			Request *request = new Request(this->getIdentifier(), PUT);
 			int id = atoi(it->first.c_str());
@@ -89,10 +93,10 @@ void ChordNode::stabilize() {
 /* DHT Put */
 void ChordNode::put(string key, string value) {
 	// Convert the key in a hash integer
-	int hKey = getMD5(key);
+	int hKey = getSHA1(key);
 	if (insideRange(hKey, predecessor->getId() + 1, thisNode->getId())) {
 		// I'm responsible for this key
-		table.insert(data(key, value));
+		table[key]=value;
 	} else {
 		// Find the node responsible for this key
 		Node *responsible = findSuccessor(hKey);
@@ -108,7 +112,7 @@ void ChordNode::put(string key, string value) {
 /* DHT Get */
 string ChordNode::get(string key) {
 	// Convert the key in a hash integer
-	int hKey = getMD5(key);
+	int hKey = getSHA1(key);
 	if (insideRange(hKey, predecessor->getId() + 1, thisNode->getId())) {
 		// I'm responsible for this key
 		dataMap::iterator it = table.find(key);
@@ -131,7 +135,7 @@ string ChordNode::get(string key) {
 /* DHT Remove */
 void ChordNode::removekey(string key) {
 	// Convert the key in a hash integer
-	int hKey = getMD5(key);
+	int hKey = getSHA1(key);
 	if (insideRange(hKey, predecessor->getId() + 1, thisNode->getId())) {
 		// I'm responsible for this key
 		dataMap::iterator it = table.find(key);
@@ -150,35 +154,14 @@ void ChordNode::removekey(string key) {
 }
 
 /* Convert a string to an integer (using MD5) */
-unsigned int ChordNode::getMD5(string str) {
-	//	// The integer value depend of the overlayIdentifier
-	//	str.append(overlayIdentifier.c_str());
-	//
-	//	hash_state md;
-	//	unsigned char md5[16];
-	//
-	//	//Initialize the MD5 hash function according to Tomcrypt library.
-	//	md5_init(&md);
-	//
-	//	//Apply SHA-1 to the input string.
-	//	md5_process(&md, (unsigned char *) str.c_str(), str.length());
-	//
-	//	//Get the hash output.
-	//	md5_done(&md, md5);
-	//
-	//	// transform the md5 string to an integer
-	//	unsigned int md5toInt = 0;
-	//	for (int i = 0; i < strlen((const char *) md5) + 1; i++)
-	//		md5toInt = md5toInt * 256 + (md5[i] & 0xff);
-	//
-	//	// check if the idE[0, 2^(spacesize - 1)]
-	//	assert(!(md5toInt > pow(2, spacesize)));
-	//
-	//	return md5toInt;
-
-	int md5 = atoi(str.c_str());
-	assert(!(md5 > pow(2, spacesize)) && !(md5 < 0));
-	return md5;
+unsigned int ChordNode::getSHA1(string str) {
+	SHA1 *sha1 = new SHA1();
+	sha1->addBytes( str.c_str(), strlen( str.c_str() ));
+	unsigned char* digest = sha1->getDigest();
+	unsigned int res = sha1->shaToInteger(digest, 20, pow(2, spacesize));
+	delete sha1;
+	free( digest );
+	return res;
 }
 
 /* Forward a message to a peer, the message is in the format: "<IP+PORT>,TRANSPORT_CODE" */
@@ -220,16 +203,12 @@ void ChordNode::fixBrokenPointers(Node *node) {
 /* Starts up the "stabilizer thread" for this peer. */
 void ChordNode::checkStable() {
 	stableThread->start();
-//	fixFingerThread->start();
-//	checkPredThread->start();
 }
 
 /* Stop the stabilization, distribute the key and shutDown the peer */
 void ChordNode::shutDown() {
 	// kill the stabilization Threads
 	stableThread->kill();
-//	fixFingerThread->kill();
-//	checkPredThread->kill();
 
 
 	// notify predecessor

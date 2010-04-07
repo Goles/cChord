@@ -124,9 +124,9 @@ bool AbstractChord::insideRange(int id, int begin, int end) {
 	int MAXid = pow(2, spacesize);
 	int MINid = 0;
 
-	return (begin < end && begin <= id && id <= end) || (begin > end && ((begin
-			<= id && id <= MAXid) || (MINid <= id && id <= end))) || ((begin
-			== end) && (id == begin));
+	return  (begin < end && begin <= id && id <= end) 	  								  ||
+			(begin > end && ((begin <= id && id <= MAXid) || (MINid <= id && id <= end))) ||
+			((begin == end) && (id == begin));
 
 }
 
