@@ -25,7 +25,7 @@ public:
 	~ProtocolSingleton();
 
 	//Action methods.
-	ChordNode*	initChordNode(const string &ip, int port, const string &overlayIntifier, unsigned int id, const string &rootDirectory);
+	ChordNode*	initChordNode(const string &ip, int port, const string &overlayIntifier, const string &rootDirectory);
 	void		stopChord();
 	
 	//Getters & setters.

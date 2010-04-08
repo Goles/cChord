@@ -29,7 +29,7 @@ using namespace std;
 class ChordNode: public AbstractChord {
 public:
 	/* Constructor & Destructor */
-	ChordNode(const string &ip, int port, const string &overlayIdentifier, int id, const string &rootDirectory);
+	ChordNode(const string &ip, int port, const string &overlayIdentifier, const string &rootDirectory);
 	~ChordNode();
 
 	/* Setters */

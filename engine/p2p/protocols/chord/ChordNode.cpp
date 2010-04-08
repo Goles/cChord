@@ -20,8 +20,7 @@
 #include <math.h>
 
 /* Constructor */
-ChordNode::ChordNode(const string &ip, int port, const string &overlayIdentifier,
-		int id, const string &rootDirectory) {
+ChordNode::ChordNode(const string &ip, int port, const string &overlayIdentifier, const string &rootDirectory) {
 
 	// Define the address space size
 	spacesize = 9;
@@ -29,7 +28,7 @@ ChordNode::ChordNode(const string &ip, int port, const string &overlayIdentifier
 	// Create the id
 	std::ostringstream oss;
 	oss << ip << port;
-	id = getSHA1(oss.str());
+	int id = getSHA1(oss.str());
 
 	// check if the idE[0, 2^(spacesize - 1)]
 	assert(!(id > pow(2, spacesize)) && !(id < 0));

@@ -32,9 +32,9 @@ ProtocolSingleton* ProtocolSingleton::getInstance() {
 
 //Initializes a ChordNode from the given parameters.
 ChordNode* ProtocolSingleton::initChordNode(const string &ip, int port,
-		const string &overlayIntifier, unsigned int id,
+		const string &overlayIntifier,
 		const string &rootDirectory) {
-	myNode = new ChordNode(ip, port, overlayIntifier, id, rootDirectory);
+	myNode = new ChordNode(ip, port, overlayIntifier, rootDirectory);
 
 	return myNode;
 }
