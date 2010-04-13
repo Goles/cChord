@@ -41,10 +41,11 @@ public:
 	}
 
 	/* Action Methods */
-	virtual string sendRequest(Request *request, Node* destination);
-	virtual void   fixBrokenPointers(Node* node);
-	virtual void checkStable();
-	virtual void shutDown();
+	virtual string	sendRequest(Request *request, Node* destination);
+	virtual void	fixBrokenPointers(Node* node);
+	virtual bool	isAlone();
+	virtual void	checkStable();
+	virtual void	shutDown();
 
 	/* Override Methods */
 	void notify(Node *n);

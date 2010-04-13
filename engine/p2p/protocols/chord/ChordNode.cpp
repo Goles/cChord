@@ -95,7 +95,9 @@ void ChordNode::put(string key, string value) {
 	int hKey = getSHA1(key);
 	if (insideRange(hKey, predecessor->getId() + 1, thisNode->getId())) {
 		// I'm responsible for this key
-		table[key]=value;
+		stringstream ss;
+		ss << table[key] << "*******";
+		table[key]=ss.str();
 	} else {
 		// Find the node responsible for this key
 		Node *responsible = findSuccessor(hKey);
@@ -131,6 +133,7 @@ string ChordNode::get(string key) {
 		return sendRequest(request, responsible);
 	}
 }
+
 /* DHT Remove */
 void ChordNode::removekey(string key) {
 	// Convert the key in a hash integer
@@ -166,6 +169,7 @@ unsigned int ChordNode::getSHA1(string str) {
 /* Forward a message to a peer, the message is in the format: "<IP+PORT>,TRANSPORT_CODE" */
 string ChordNode::sendRequest(Request *request, Node* destination) {
 	char *response = transport->sendRequest(request, destination);
+	// response received
 	if (response) {
 		stringstream ss;
 		ss << response;
@@ -176,27 +180,38 @@ string ChordNode::sendRequest(Request *request, Node* destination) {
 		fixBrokenPointers(destination);
 		// time to fix the chord
 		sleep(1);
+		// The node is completely disconnected of the backbone
+		if (isAlone()) { // there is only one response possible
+			return getThisNode()->toString();
+		}
 		// try again the request with a new destination
 		return sendRequest(request, findSuccessor(destination->getId()));
 	}
 }
 
+/* Fix broken pointers algorithm */
 void ChordNode::fixBrokenPointers(Node *node) {
 	for (int i = 0; i < fingerTable.size() - 1; i++) {
 		if (fingerTable[i]->getId() == node->getId()) {
 			fingerTable[i] = new Node(thisNode->toString());
-		}
+		} 
 	}
 	if (predecessor->getId() == node->getId()) {
 		predecessor = new Node(thisNode->toString());
-	}
+	} 
 	if (successor->getId() == node->getId()) {
 		successor = new Node(thisNode->toString());
 	}
-	if(predecessor->getId() == thisNode->getId() &&
-	   thisNode->getId() == successor->getId()){
-		cout << "I lost the chord... \n";
+}
+
+/* return true if the node is completely disconnected of the chord */
+bool ChordNode::isAlone(){
+	for (int i = 0; i < fingerTable.size() - 1; i++) {
+		if (fingerTable[i]->getId() != thisNode->getId()){
+			return false;
+		}
 	}
+	return predecessor->getId() == thisNode->getId() && successor->getId() == thisNode->getId();
 }
 
 /* Starts up the "stabilizer thread" for this peer. */
