@@ -96,7 +96,7 @@ void ChordNode::put(string key, string value) {
 	if (insideRange(hKey, predecessor->getId() + 1, thisNode->getId())) {
 		// I'm responsible for this key
 		stringstream ss;
-		ss << table[key] << "*******";
+		ss << table[key] << value;
 		table[key]=ss.str();
 	} else {
 		// Find the node responsible for this key
