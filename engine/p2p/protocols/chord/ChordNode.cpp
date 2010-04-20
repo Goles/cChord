@@ -95,9 +95,10 @@ void ChordNode::put(string key, string value) {
 	int hKey = getSHA1(key);
 	if (insideRange(hKey, predecessor->getId() + 1, thisNode->getId())) {
 		// I'm responsible for this key
-		stringstream ss;
-		ss << table[key] << value;
-		table[key]=ss.str();
+		//stringstream ss;
+		//ss << table[key] << value;
+		//table[key]=ss.str();
+		table[key] = value;
 	} else {
 		// Find the node responsible for this key
 		Node *responsible = findSuccessor(hKey);
