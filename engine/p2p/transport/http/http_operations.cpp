@@ -11,15 +11,17 @@
 #include <iostream>
 #include <fstream>
 #include <cstdio>
+#include <cstring>
 
 char* process_http(int sockfd, char *host, char *page, char *poststr) {
 	//This is to avoid application crash when we perform write() or read.
 	signal(SIGPIPE, SIG_IGN);
 	ssize_t n;
-	char sendline[MAXLINE + 1];
-	char *recvline = (char *) malloc(sizeof(char) * (MAXLINE + 1));
+	int sendlineSize = strlen(page) + MAXLINE + 1;
+	char sendline[sendlineSize];
+	char *recvline = (char *) malloc(sizeof(char) * (sendlineSize));
 
-	snprintf(sendline, MAXSUB, "POST %s HTTP/1.0\r\n"
+	sprintf(sendline, "POST %s HTTP/1.0\r\n"
 		"Host: %s\r\n"
 		"Content-type: application/x-www-form-urlencoded\r\n"
 		"Content-length: %d\r\n\r\n"
@@ -29,16 +31,12 @@ char* process_http(int sockfd, char *host, char *page, char *poststr) {
 //		printf("Failed to write to socket! \n");
 //		printf("Check if socket is writeable.\n");
 //		printf("Errno %d: %s\n", errno, strerror(errno));
-
 		return NULL;
 	}
 
-	while ((n = read(sockfd, recvline, MAXLINE)) != 0) {
+	while ((n = read(sockfd, recvline, sendlineSize)) != 0) {
 		recvline[n] = '\0';
 	}
-
-	//For debugging you can view the HTML response etc with this.
-	//	printf("\n--- BACK FROM THE POST REQUEST-- \n");
 
 	return recvline; //this must be freed by the receiver!! ( allocated here! )
 }
