@@ -28,7 +28,7 @@ class SHA1
 		// utility methods
 		static Uint32 lrot( Uint32 x, int bits );
 		static void storeBigEndianUint32( unsigned char* byte, Uint32 num );
-		static void hexPrinter( unsigned char* c, int l );
+		static const char *hexPrinter( unsigned char* c, int l );
 		static unsigned int shaToInteger( unsigned char* c, int l, unsigned int spacesize );
 };
 

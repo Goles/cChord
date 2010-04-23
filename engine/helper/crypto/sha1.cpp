@@ -14,22 +14,27 @@ accompanying LICENSE file.
 #include <assert.h>
 #include <map>
 #include <iostream>
+#include <sstream>
 #include <math.h>
 #include "sha1.h"
 
 using namespace std;
 
 // print out memory in hexadecimal
-void SHA1::hexPrinter( unsigned char* c, int l )
+const char *SHA1::hexPrinter( unsigned char* c, int l )
 {
 	assert( c );
 	assert( l > 0 );
+	stringstream hex;
+	char x[5];
 	while( l > 0 )
 	{
-		printf( " %02x", *c );
+		sprintf( x, "%02x", *c );
 		l--;
 		c++;
+		hex << x;
 	}
+	return hex.str().c_str();
 }
 
 /* Convert a sha-1 in an integer modulo spacesize */
