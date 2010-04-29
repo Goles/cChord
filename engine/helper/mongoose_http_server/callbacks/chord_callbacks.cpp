@@ -174,5 +174,7 @@ void call_chord_hash(struct mg_connection *conn,
 	mg_printf(conn, sha1->hexPrinter(digest, 20));
 
 	//Release the allocated memory for id variable.
+	delete sha1;
+	free( digest );
 	mg_free(key);
 }
