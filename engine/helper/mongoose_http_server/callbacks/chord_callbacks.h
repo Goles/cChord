@@ -39,4 +39,7 @@ void call_chord_setsucc(struct mg_connection *conn,
 void call_chord_setpred(struct mg_connection *conn,
 		const struct mg_request_info *request_info, void *user_data);
 
+void call_chord_hash(struct mg_connection *conn,
+		const struct mg_request_info *request_info, void *user_data);
+
 #endif

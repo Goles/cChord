@@ -94,6 +94,7 @@ void TransportHTTP::initCallbacks() {
 		mg_set_uri_callback(ctx, "/removekey", &call_chord_removekey, NULL);
 		mg_set_uri_callback(ctx, "/setsucc", &call_chord_setsucc, NULL);
 		mg_set_uri_callback(ctx, "/setpred", &call_chord_setpred, NULL);
+		mg_set_uri_callback(ctx, "/hash", &call_chord_hash, NULL);
 	}
 }
 

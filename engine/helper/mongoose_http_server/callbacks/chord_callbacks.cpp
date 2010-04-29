@@ -11,6 +11,7 @@
 #include "ProtocolSingleton.h"
 #include "mongoose.h"
 #include "http_operations.h"
+#include "sha1.h"
 #include <assert.h>
 
 /*
@@ -157,4 +158,21 @@ void call_chord_setpred(struct mg_connection *conn,
 
 	//	//Release the allocated memory for id variable.
 	mg_free(n);
+}
+
+/*
+ * /hash callback, handles a hash value request
+ */
+void call_chord_hash(struct mg_connection *conn,
+		const struct mg_request_info *request_info, void *user_data) {
+
+	char *key = NULL;
+	assert((key = mg_get_var(conn, "key")) != NULL);
+	SHA1 *sha1 = new SHA1();
+	sha1->addBytes( key, strlen(key));
+	unsigned char *digest = sha1->getDigest();
+	mg_printf(conn, sha1->hexPrinter(digest, 20));
+
+	//Release the allocated memory for id variable.
+	mg_free(key);
 }
