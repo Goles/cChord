@@ -64,7 +64,7 @@ public:
 	/* Helper Methosha1 = new SHA1();ds */
 	string printTable();
 
-protected:
+	/* the transport layer */
 	TransportHTTP* transport;
 
 private:

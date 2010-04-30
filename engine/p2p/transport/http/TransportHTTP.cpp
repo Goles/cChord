@@ -55,10 +55,11 @@ void TransportHTTP::startHTTP() {
 	/* Now Mongoose is up, running and configured.
 	 Serve until somebody terminates us */
 
-	cout << "----------------------------------------------------" << endl;
-	cout << "Mongoose Server is running on http://localhost:"
+	cout << "--------------------------------------------------" << endl;
+	cout << "Server is running on http://"
+			<< getLocalIp() << ":"
 			<< this->getPort() << endl;
-	cout << "----------------------------------------------------" << endl;
+	cout << "--------------------------------------------------" << endl;
 }
 
 //Stops the mongoose HTTP server.
