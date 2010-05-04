@@ -178,3 +178,11 @@ void call_chord_hash(struct mg_connection *conn,
 	free( digest );
 	mg_free(key);
 }
+
+/*
+ * /shutdown callback, handles a shutDown value request
+ */
+void call_chord_shutdown(struct mg_connection *conn,
+					 const struct mg_request_info *request_info, void *user_data) {
+	P_SINGLETON->getChordNode()->shutDown();
+}
