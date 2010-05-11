@@ -119,11 +119,11 @@ void call_chord_get(struct mg_connection *conn,
 void call_chord_removekey(struct mg_connection *conn,
 					const struct mg_request_info *request_info, void *user_data) {
 	char *key = NULL;
-	
+
 	assert((key = mg_get_var(conn, "key")) != NULL);
-	
+
 	P_SINGLETON->getChordNode()->removekey(key);
-	
+
 	//Release the allocated memory for id variable.
 	mg_free(key);
 }
@@ -156,7 +156,7 @@ void call_chord_setpred(struct mg_connection *conn,
 	Node *node = new Node(n);
 	P_SINGLETON->getChordNode()->setPredecessor(node);
 
-	//	//Release the allocated memory for id variable.
+	//Release the allocated memory for id variable.
 	mg_free(n);
 }
 
@@ -165,17 +165,13 @@ void call_chord_setpred(struct mg_connection *conn,
  */
 void call_chord_hash(struct mg_connection *conn,
 		const struct mg_request_info *request_info, void *user_data) {
-
 	char *key = NULL;
-	assert((key = mg_get_var(conn, "key")) != NULL);
-	SHA1 *sha1 = new SHA1();
-	sha1->addBytes( key, strlen(key));
-	unsigned char *digest = sha1->getDigest();
-	mg_printf(conn, sha1->hexPrinter(digest, 20));
 
-	//Release the allocated memory for id variable.
-	delete sha1;
-	free( digest );
+	assert((key = mg_get_var(conn, "key")) != NULL);
+	string result = P_SINGLETON->getChordNode()->getHexSHA1(key);
+	mg_printf(conn, result.c_str());
+
+	// Release the allocated memory for id variable.
 	mg_free(key);
 }
 
@@ -184,5 +180,5 @@ void call_chord_hash(struct mg_connection *conn,
  */
 void call_chord_shutdown(struct mg_connection *conn,
 					 const struct mg_request_info *request_info, void *user_data) {
-	P_SINGLETON->getChordNode()->shutDown();
+//	P_SINGLETON->getChordNode()->shutDown();
 }

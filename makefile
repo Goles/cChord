@@ -58,7 +58,6 @@ MYMEDLIB : \
 		./HTTP_Client.o\
 		./sha1.o\
 		./callbacks.o\
-		./tracker_callbacks.o\
 		./chord_callbacks.o\
 		./mongoose.o\
 		./Thread.o\
@@ -82,7 +81,6 @@ clean :
 		./HTTP_Client.o\
 		./sha1.o\
 		./callbacks.o\
-		./tracker_callbacks.o\
 		./chord_callbacks.o\
 		./mongoose.o\
 		./Thread.o\
@@ -134,12 +132,6 @@ install : MYMEDLIB
 # Item # 6 -- callbacks --
 ./callbacks.o : engine/helper/mongoose_http_server/callbacks/callbacks.cpp
 	$(CC) $(CCFLAGS) $(CC_OPTIONS) engine/helper/mongoose_http_server/callbacks/callbacks.cpp -c $(INCLUDE) -o ./callbacks.o
-
-
-# Item # 7 -- tracker_callbacks --
-./tracker_callbacks.o : engine/helper/mongoose_http_server/callbacks/tracker_callbacks.cpp
-	$(CC) $(CCFLAGS) $(CC_OPTIONS) engine/helper/mongoose_http_server/callbacks/tracker_callbacks.cpp -c $(INCLUDE) -o ./tracker_callbacks.o
-
 
 # Item # 8 -- chord_callbacks --
 ./chord_callbacks.o : engine/helper/mongoose_http_server/callbacks/chord_callbacks.cpp

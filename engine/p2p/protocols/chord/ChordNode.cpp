@@ -28,7 +28,7 @@ ChordNode::ChordNode(const string &ip, int port, const string &overlayIdentifier
 	// Create the id
 	std::ostringstream oss;
 	oss << ip << port;
-	int id = getSHA1(oss.str());
+	int id = getIntSHA1(oss.str());
 
 	// check if the idE[0, 2^(spacesize - 1)]
 	assert(!(id > pow(2, spacesize)) && !(id < 0));
@@ -92,7 +92,7 @@ void ChordNode::stabilize() {
 /* DHT Put */
 void ChordNode::put(string key, string value) {
 	// Convert the key in a hash integer
-	int hKey = getSHA1(key);
+	int hKey = getIntSHA1(key);
 	if (insideRange(hKey, predecessor->getId() + 1, thisNode->getId())) {
 		// I'm responsible for this key
 		//stringstream ss;
@@ -114,7 +114,7 @@ void ChordNode::put(string key, string value) {
 /* DHT Get */
 string ChordNode::get(string key) {
 	// Convert the key in a hash integer
-	int hKey = getSHA1(key);
+	int hKey = getIntSHA1(key);
 	if (insideRange(hKey, predecessor->getId() + 1, thisNode->getId())) {
 		// I'm responsible for this key
 		dataMap::iterator it = table.find(key);
@@ -138,7 +138,7 @@ string ChordNode::get(string key) {
 /* DHT Remove */
 void ChordNode::removekey(string key) {
 	// Convert the key in a hash integer
-	int hKey = getSHA1(key);
+	int hKey = getIntSHA1(key);
 	if (insideRange(hKey, predecessor->getId() + 1, thisNode->getId())) {
 		// I'm responsible for this key
 		dataMap::iterator it = table.find(key);
@@ -156,8 +156,8 @@ void ChordNode::removekey(string key) {
 	}
 }
 
-/* Convert a string to an integer (using MD5) */
-unsigned int ChordNode::getSHA1(string str) {
+/* Convert a string into an integer in [0, spacesize] */
+unsigned int ChordNode::getIntSHA1(string str) {
 	SHA1 *sha1 = new SHA1();
 	sha1->addBytes( str.c_str(), strlen( str.c_str() ));
 	unsigned char* digest = sha1->getDigest();
@@ -165,6 +165,17 @@ unsigned int ChordNode::getSHA1(string str) {
 	delete sha1;
 	free( digest );
 	return res;
+}
+
+/* Convert a string into a string (using SHA1) */
+char *ChordNode::getHexSHA1(string str) {
+	SHA1 *sha1 = new SHA1();
+	sha1->addBytes( str.c_str(), strlen( str.c_str() ));
+	unsigned char *digest = sha1->getDigest();
+	char *h = sha1->hexPrinter(digest, 20);
+	delete sha1;
+	free( digest );
+	return h;
 }
 
 /* Forward a message to a peer, the message is in the format: "<IP+PORT>,TRANSPORT_CODE" */

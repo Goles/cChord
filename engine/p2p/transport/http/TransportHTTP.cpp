@@ -76,15 +76,6 @@ void TransportHTTP::initCallbacks() {
 		mg_set_uri_callback(ctx, "/ping", &call_ping, NULL);
 		mg_set_uri_callback(ctx, "/pong", &call_pong, NULL);
 
-		/*Set tracker transport code Callbacks*/
-		mg_set_uri_callback(ctx, "/tracker/addnode", &call_tracker_addnode,
-				NULL);
-		mg_set_uri_callback(ctx, "/tracker/getconnection",
-				&call_tracker_getconnection, NULL);
-		mg_set_uri_callback(ctx, "/tracker/removenode",
-				&call_tracker_removenode, NULL);
-		mg_set_uri_callback(ctx, "/tracker/join", &call_tracker_join, NULL);
-
 		/*Set Chord transport code Callbacks*/
 		mg_set_uri_callback(ctx, "/getpred", &call_chord_getpred, NULL);
 		mg_set_uri_callback(ctx, "/findsucc", &call_chord_findsucc, NULL);
@@ -97,6 +88,13 @@ void TransportHTTP::initCallbacks() {
 		mg_set_uri_callback(ctx, "/setpred", &call_chord_setpred, NULL);
 		mg_set_uri_callback(ctx, "/hash", &call_chord_hash, NULL);
 		mg_set_uri_callback(ctx, "/shutdown", &call_chord_shutdown, NULL);
+	}
+}
+
+//add a callback to the mongoose HTTP server callbacks.
+void TransportHTTP::addCallback(const char *name, mg_callback_t func) {
+	if (ctx != NULL) {
+		mg_set_uri_callback(ctx, name, func, NULL);
 	}
 }
 

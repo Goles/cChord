@@ -20,8 +20,8 @@ using namespace std;
 
 class IRequestHandler {
 public:
-	//	virtual string	handleRequest(const string &code) = 0;
-	//	virtual void	kill() = 0;
+		/* handle a request from the user interface */
+//		virtual string	handleRequest(const string &code) = 0;
 };
 
 #endif

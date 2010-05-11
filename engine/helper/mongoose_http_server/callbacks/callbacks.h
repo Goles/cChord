@@ -12,7 +12,6 @@
 
 #include "AbstractChord.h"
 #include "chord_callbacks.h"
-#include "tracker_callbacks.h"
 #include "http_operations.h"
 #include <stdlib.h>
 

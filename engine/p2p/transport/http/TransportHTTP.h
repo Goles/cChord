@@ -35,6 +35,7 @@ public:
 	void startHTTP();
 	void stopHTTP();
 	void initCallbacks();
+	void addCallback(const char *name, void (*callback)(mg_connection*, const mg_request_info*, void*));
 
 	//Simple tracker interface.
 	string connectToTracker(const string &ip, int port, Node *n);

@@ -21,7 +21,7 @@ accompanying LICENSE file.
 using namespace std;
 
 // print out memory in hexadecimal
-const char *SHA1::hexPrinter( unsigned char* c, int l )
+char *SHA1::hexPrinter( unsigned char* c, int l )
 {
 	assert( c );
 	assert( l > 0 );
@@ -34,7 +34,7 @@ const char *SHA1::hexPrinter( unsigned char* c, int l )
 		c++;
 		hex << x;
 	}
-	return hex.str().c_str();
+	return const_cast<char*>(hex.str().c_str());
 }
 
 /* Convert a sha-1 in an integer modulo spacesize */
