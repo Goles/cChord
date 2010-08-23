@@ -16,6 +16,9 @@
 #include "sha1.h";
 #include <sstream>
 #include <iostream>
+#include <sys/stat.h>
+#include <fstream>
+#include <dirent.h>
 #include <assert.h>
 #include <math.h>
 
@@ -69,24 +72,89 @@ void ChordNode::notify(Node *n) {
 	}
 }
 
+/* Custom chord stabilize */
 void ChordNode::stabilize() {
 	((AbstractChord *) this)->stabilize();
 	// If the predecessor as changed, update the DHT table
 	if (notified && predecessor->getId() != thisNode->getId()) {
-		for (dataMap::iterator it = table.begin(); it != table.end(); ++it) {
-			Request *request = new Request(this->getIdentifier(), PUT);
-			int id = atoi(it->first.c_str());
-			if (!insideRange(id, predecessor->getId(), thisNode->getId())) {
-				request->addArg("key", it->first);
-				request->addArg("value", it->second);
-				// Send the Put request
-				sendRequest(request, predecessor);
-				// remove the key from my table
-				table.erase(it);
+		struct dirent *dirEntry;
+		char path[256];
+		DIR *dir = opendir(".mymed/data");
+		if(dir != NULL){
+			while(dirEntry=readdir(dir)) {
+				if(dirEntry->d_type != DT_DIR){
+					int hFilename = getIntSHA1(dirEntry->d_name);
+					if (!insideRange(hFilename, predecessor->getId(), thisNode->getId())){
+						Request *request = new Request(this->getIdentifier(), PUT);
+						request->addArg("key", dirEntry->d_name);
+						request->addArg("value", openData(dirEntry->d_name));
+						sendRequest(request, predecessor);
+						sprintf(path, ".mymed/data/%s", dirEntry->d_name);
+						if( remove( path ) != 0 ) {
+							perror( "Error deleting file" );
+						}
+					}
+				}
 			}
 		}
 		notified = false;
 	}
+}
+
+/* find and replace string tools */
+string find_and_replace(string str, const string find, string replace) {
+	size_t j;
+	string source = str;
+	for (; (j = source.find(find)) != string::npos;) {
+		source.replace(j, find.length(), replace);
+	}
+	return source;
+}
+
+/* serialize a postit before to store it into the DHT */
+string ChordNode::serialize(string data) {
+	data = find_and_replace(data, " ", "\\_");
+	data = find_and_replace(data, "\t", "\\t");
+	data = find_and_replace(data, "\n", "\\n");
+	return data;
+}
+
+/* reconstruct a serialized postit */
+string ChordNode::unserialize(string data) {
+	data = find_and_replace(data, "\\_", " ");
+	data = find_and_replace(data, "\\t", "\t");
+	data = find_and_replace(data, "\\n", "\n");
+	return data;
+}
+
+/* save the data value in a text file */
+void ChordNode::saveData(string filename, string value){
+	char path[256];
+	sprintf(path, ".mymed/data/%s", filename.c_str());
+	mkdir(".mymed/", 0777);
+	mkdir(".mymed/data", 0777);
+	ofstream data(path, ios::out);
+	data << unserialize(value);
+}
+
+/* return the content of the file */
+string ChordNode::openData(string filename){
+	string line, data="";
+	char path[256];
+	sprintf(path, ".mymed/data/%s", filename.c_str());
+	ifstream myfile(path);
+	if (myfile.is_open()) {
+		while (! myfile.eof()) {
+			getline(myfile,line);
+			data.append(line.c_str());
+			if(! myfile.eof()){
+				data.append("\n");
+			}
+		}
+		myfile.close();
+	}
+	else return "null";
+	return data;
 }
 
 /* DHT Put */
@@ -95,10 +163,8 @@ void ChordNode::put(string key, string value) {
 	int hKey = getIntSHA1(key);
 	if (insideRange(hKey, predecessor->getId() + 1, thisNode->getId())) {
 		// I'm responsible for this key
-		//stringstream ss;
-		//ss << table[key] << value;
-		//table[key]=ss.str();
-		table[key] = value;
+		//		table[key] = value;
+		saveData(key, value);
 	} else {
 		// Find the node responsible for this key
 		Node *responsible = findSuccessor(hKey);
@@ -117,13 +183,7 @@ string ChordNode::get(string key) {
 	int hKey = getIntSHA1(key);
 	if (insideRange(hKey, predecessor->getId() + 1, thisNode->getId())) {
 		// I'm responsible for this key
-		dataMap::iterator it = table.find(key);
-		if (it != table.end()) {
-			return (it->second);
-		} else {
-			string err = "no result";
-			return err;
-		}
+		return openData(key);
 	} else {
 		// Find the node responsible for this key
 		Node *responsible = findSuccessor(hKey);
@@ -141,9 +201,10 @@ void ChordNode::removekey(string key) {
 	int hKey = getIntSHA1(key);
 	if (insideRange(hKey, predecessor->getId() + 1, thisNode->getId())) {
 		// I'm responsible for this key
-		dataMap::iterator it = table.find(key);
-		if (it != table.end()) {
-			table.erase(it);
+		char path[256];
+		sprintf(path, ".mymed/data/%s", key.c_str());
+		if( remove( path ) != 0 ) {
+			perror( "Error deleting file" );
 		}
 	} else {
 		// Find the node responsible for this key
@@ -236,7 +297,6 @@ void ChordNode::shutDown() {
 	// kill the stabilization Threads
 	stableThread->kill();
 
-
 	// notify predecessor
 	Request *request = new Request(this->getIdentifier(), SETSUCC);
 	request->addArg("successor", successor->toString());
@@ -247,27 +307,29 @@ void ChordNode::shutDown() {
 	request->addArg("predecessor", predecessor->toString());
 	sendRequest(request, successor);
 
-	// give the part of the DHT to the successor
-	for (dataMap::iterator it = table.begin(); it != table.end(); ++it) {
-		request = new Request(this->getIdentifier(), PUT);
-		request->addArg("key", it->first);
-		request->addArg("value", it->second);
-		sendRequest(request, successor);
-		// remove the key from my table
-		table.erase(it);
+	// if the node is not alone
+	if(successor->getId() != getThisNode()->getId()){
+		// give the part of the DHT to the successor
+		struct dirent *dirEntry;
+		DIR *dir = opendir(".mymed/data");
+		char path[256];
+		while(dirEntry=readdir(dir)) {
+			if(dirEntry->d_type != DT_DIR){
+				request = new Request(this->getIdentifier(), PUT);
+				request->addArg("key", dirEntry->d_name);
+				request->addArg("value", openData(dirEntry->d_name));
+				sendRequest(request, successor);
+				sprintf(path, ".mymed/data/%s", dirEntry->d_name);
+				if( remove( path ) != 0 ) {
+					perror( "Error deleting file" );
+				}
+			}
+		}
 	}
+
+	// leave
 	cout << "bye bye...\n";
 	sleep(1);
 	exit(0);
 }
 
-/* print node status */
-string ChordNode::printTable() {
-	stringstream ss(stringstream::in | stringstream::out);
-	ss << "data:\n";
-	for (dataMap::const_iterator it = table.begin(); it != table.end(); ++it) {
-		ss << "\t[" << it->first << "]";
-		ss << " - " << it->second << '\n';
-	}
-	return ss.str();
-}

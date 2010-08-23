@@ -51,15 +51,19 @@ public:
 	string get(string key);
 	void   removekey(string key);
 
+
+	/* data CRUD */
+	void saveData(string filename, string value);
+	string openData(string filename);
+	string serialize(string data);
+	string unserialize(string data);
+
 	/* tools methods */
 	unsigned int   getIntSHA1(string key);
 	char *getHexSHA1(string str);
 	string getIdentifier() 			{ return overlayIdentifier; }
 	TransportHTTP* getTransport()   { return transport; }
 	Node* getThisNode() 			{ return thisNode; }
-
-	/* Helper Methosha1 = new SHA1();ds */
-	string printTable();
 
 	/* the transport layer */
 	TransportHTTP* transport;

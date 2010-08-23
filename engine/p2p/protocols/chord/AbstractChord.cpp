@@ -97,9 +97,9 @@ void AbstractChord::stabilize() {
 
 void AbstractChord::notify(Node *node) {
 	if ((predecessor->getId() == thisNode->getId()) ||
-			(insideRange(node->getId(), predecessor->getId() + 1, thisNode->getId() - 1)))
+			(insideRange(node->getId(), predecessor->getId() + 1, thisNode->getId() - 1))) {
 		predecessor = node;
-
+	}
 }
 
 void AbstractChord::fixFingersTable() {

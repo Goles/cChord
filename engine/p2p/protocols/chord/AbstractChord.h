@@ -38,13 +38,13 @@ public:
 
 	virtual void	checkStable() = 0;
 	
-	/*Abstract Methods*/
+	/* Abstract Methods */
 	virtual string sendRequest(Request *request, Node* destination) = 0;
 	
-	/*Display*/
+	/* Display */
 	string toString();
-	
-	/*Getters & Setters*/
+
+	/* Getters & Setters */
 	Node*	getThisNode() { return thisNode; }
 	
 	Node*	getSuccessor(){ return successor; }
