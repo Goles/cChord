@@ -16,17 +16,17 @@ CC = /usr/bin/g++
 LNK_OPTIONS = 
 CCFLAGS =
 
-@echo ---=/\=\/= Building myMedLib =\/=/\=--
+#@echo ---=/\=\/= Building myMedLib =\/=/\=--
 
 #if we passed ARCH=osx
 ifeq ($(ARCH),osx)
-	@echo Building for OSX ( ARCH=osx )
+	#@echo Building for OSX ( ARCH=osx )
 	CC_OPTIONS = -DOSX=1
 endif
 
 #if we passed ARCH=linux
 ifeq ($(ARCH),linux)
-	@echo Building for LINUX ( ARCH=linux )
+	#@echo Building for LINUX ( ARCH=linux )
 	LNK_OPTIONS = -lpthread -lrt -ldl
 endif
 
