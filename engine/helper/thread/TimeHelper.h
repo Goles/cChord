@@ -2,8 +2,8 @@
  *  TimeHelper.h
  *  iPhone_p2p_engine
  *
- *  Created by LogNet team 2010 - INRIA
- *  Mediteranee - Sophia Antipolis - France
+ *  Created by Laurent Vanni & Nicolas Goles Domic, 2010
+
  *
  *	This file is an implementation of clock_gettime() Linux system function,
  *  widely used to seed Threading timers...etc.

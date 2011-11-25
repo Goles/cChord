@@ -2,8 +2,8 @@
  *  chord_callbacks.h
  *  P2P_Engine
  *
- *  Created by LogNet team 2010 - INRIA
- *  Mediteranee - Sophia Antipolis - France
+ *  Created by Laurent Vanni & Nicolas Goles Domic, 2010
+
  *
  *	This file contains all the callbacks to effectively handle the Chord Protocol
  *	via the HTTP server.

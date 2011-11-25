@@ -2,8 +2,7 @@
  *  ChordNode.cpp
  *  iPhone_p2p_engine
  *
- *  Created by LogNet team 2010 - INRIA
- *  Mediteranee - Sophia Antipolis - France
+ *  Created by Laurent Vanni & Nicolas Goles Domic, 2010
  *
  */
 
@@ -21,6 +20,9 @@
 #include <dirent.h>
 #include <assert.h>
 #include <math.h>
+
+static const std::string PERSISTENCE_DIR = ".chord/data";
+static const std::string PERSISTENCE_DIR_STRING = ".chord/data/%s";
 
 /* Constructor */
 ChordNode::ChordNode(const string &ip, int port, const string &overlayIdentifier, const string &rootDirectory) {
@@ -79,7 +81,7 @@ void ChordNode::stabilize() {
 	if (notified && predecessor->getId() != thisNode->getId()) {
 		struct dirent *dirEntry;
 		char path[256];
-		DIR *dir = opendir(".mymed/data");
+		DIR *dir = opendir(PERSISTENCE_DIR.c_str());
 		if(dir != NULL){
 			while(dirEntry=readdir(dir)) {
 				if(dirEntry->d_type != DT_DIR){
@@ -89,7 +91,7 @@ void ChordNode::stabilize() {
 						request->addArg("key", dirEntry->d_name);
 						request->addArg("value", openData(dirEntry->d_name));
 						sendRequest(request, predecessor);
-						sprintf(path, ".mymed/data/%s", dirEntry->d_name);
+						sprintf(path, PERSISTENCE_DIR_STRING.c_str(), dirEntry->d_name);
 						if( remove( path ) != 0 ) {
 							perror( "Error deleting file" );
 						}
@@ -130,9 +132,9 @@ string ChordNode::unserialize(string data) {
 /* save the data value in a text file */
 void ChordNode::saveData(string filename, string value){
 	char path[256];
-	sprintf(path, ".mymed/data/%s", filename.c_str());
-	mkdir(".mymed/", 0777);
-	mkdir(".mymed/data", 0777);
+	sprintf(path, PERSISTENCE_DIR_STRING.c_str(), filename.c_str());
+	mkdir(".chord/", 0777);
+	mkdir(".chord/data", 0777);
 	ofstream data(path, ios::out);
 	data << unserialize(value);
 }
@@ -141,7 +143,7 @@ void ChordNode::saveData(string filename, string value){
 string ChordNode::openData(string filename){
 	string line, data="";
 	char path[256];
-	sprintf(path, ".mymed/data/%s", filename.c_str());
+	sprintf(path, PERSISTENCE_DIR_STRING.c_str(), filename.c_str());
 	ifstream myfile(path);
 	if (myfile.is_open()) {
 		while (! myfile.eof()) {
@@ -202,7 +204,7 @@ void ChordNode::removekey(string key) {
 	if (insideRange(hKey, predecessor->getId() + 1, thisNode->getId())) {
 		// I'm responsible for this key
 		char path[256];
-		sprintf(path, ".mymed/data/%s", key.c_str());
+		sprintf(path, PERSISTENCE_DIR_STRING.c_str(), key.c_str());
 		if( remove( path ) != 0 ) {
 			perror( "Error deleting file" );
 		}
@@ -311,7 +313,7 @@ void ChordNode::shutDown() {
 	if(successor->getId() != getThisNode()->getId()){
 		// give the part of the DHT to the successor
 		struct dirent *dirEntry;
-		DIR *dir = opendir(".mymed/data");
+		DIR *dir = opendir(PERSISTENCE_DIR.c_str());
 		char path[256];
 		while(dirEntry=readdir(dir)) {
 			if(dirEntry->d_type != DT_DIR){
@@ -319,7 +321,7 @@ void ChordNode::shutDown() {
 				request->addArg("key", dirEntry->d_name);
 				request->addArg("value", openData(dirEntry->d_name));
 				sendRequest(request, successor);
-				sprintf(path, ".mymed/data/%s", dirEntry->d_name);
+				sprintf(path, PERSISTENCE_DIR_STRING.c_str(), dirEntry->d_name);
 				if( remove( path ) != 0 ) {
 					perror( "Error deleting file" );
 				}

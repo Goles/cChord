@@ -2,8 +2,7 @@
  *  ChordNode.h
  *  iPhone_p2p_engine
  *
- *  Created by LogNet team 2010 - INRIA
- *  Mediteranee - Sophia Antipolis - France
+ *  Created by Laurent Vanni & Nicolas Goles Domic, 2010
  *
  *	This class is the implementation of the "Chord" class,
  *	it inherits from the Chord abstract class and implements

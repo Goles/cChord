@@ -1,0 +1,42 @@
+<!-- ================================================== -->
+<!-- = Chord++ By Laurent Vanni & Nicolas Goles Domic = -->
+<!-- ================================================== -->
+
+Building the chord Engine in OSX:
+
+$make ARCH=osx
+
+Building the chord Engine in LINUX:
+
+$make ARCH=linux
+
+Installing the chord++ library ( called mymed.a for now )
+
+$sudo make install
+
+This should produce a libmymed.a static library which you can link to your project and copy the library headers to /usr/include/mymed/
+
+<!-- ===================== -->
+<!-- = Compile & Install = -->
+<!-- ===================== -->
+$make ARCH=linux		// You can also do ARCH=osx
+$sudo make install		// This will install the headerfiles in /usr/include/mymed/
+$make clean				// You can also specify veryclean
+
+NOTE: You will have to put the mymed.a lib where you will use it ( you could put it somewhere in /usr/lib if you want but it's not done by default)
+
+<!-- ========= -->
+<!-- = Usage = -->
+<!-- ========= -->
+
+You can actually take a look at the file "example.c" to see a small example.
+
+<!-- ======== -->
+<!-- = TODO = -->
+<!-- ======== -->
+
+There are still some memory leaks in this project, not VERY serious ( we left it running with around
+50 nodes for 3 months until it crashed from out of memory). We don't have time to isolate this
+leaks, so contributions are appreciated :).
+
+L.V & N.G

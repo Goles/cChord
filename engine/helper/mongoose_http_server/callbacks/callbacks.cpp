@@ -2,8 +2,8 @@
  *  callbacks.c
  *  iPhone_POC_P2P
  *
- *  Created by LogNet team 2010 - INRIA
- *  Mediteranee - Sophia Antipolis - France
+ *  Created by Laurent Vanni & Nicolas Goles Domic, 2010
+
  *
  */
 
